@@ -1,17 +1,25 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppStore } from '../lib/store';
 import { Archive, Search } from 'lucide-react';
 
 export default function RepositoryPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const queryParam = searchParams.get('q') || '';
   const { instruments, testSessions, reports } = useAppStore();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(queryParam);
   const [statusFilter, setStatusFilter] = useState('');
   const [classFilter, setClassFilter] = useState('');
   const [resultFilter, setResultFilter] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 12;
+
+  useEffect(() => {
+    if (queryParam) {
+      setSearch(queryParam);
+    }
+  }, [queryParam]);
 
   const enriched = useMemo(() => {
     return instruments.map(inst => {
@@ -43,13 +51,19 @@ export default function RepositoryPage() {
     <div>
       <div className="page-header">
         <h2>Instrument Repository</h2>
-        <p>Searchable repository of all instruments, test results and reports.</p>
+        <p>Searchable central archive of all registered instruments, technical records, and verification outcomes.</p>
       </div>
 
       <div className="filter-bar">
-        <div className="header-search" style={{ width: 260 }}>
-          <Search />
-          <input type="text" className="form-input" placeholder="Search by ID, serial, model…" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
+        <div className="filter-search" style={{ width: 280 }}>
+          <Search size={14} />
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Search by ID, serial, model…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+          />
         </div>
         <select className="form-select" value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}>
           <option value="">All Status</option>
@@ -61,8 +75,10 @@ export default function RepositoryPage() {
         </select>
         <select className="form-select" value={classFilter} onChange={e => { setClassFilter(e.target.value); setPage(1); }}>
           <option value="">All Classes</option>
-          <option value="I">Class I</option><option value="II">Class II</option>
-          <option value="III">Class III</option><option value="IIII">Class IIII</option>
+          <option value="I">Class I</option>
+          <option value="II">Class II</option>
+          <option value="III">Class III</option>
+          <option value="IIII">Class IIII</option>
         </select>
         <select className="form-select" value={resultFilter} onChange={e => { setResultFilter(e.target.value); setPage(1); }}>
           <option value="">All Results</option>
@@ -77,15 +93,22 @@ export default function RepositoryPage() {
           <div className="empty-state">
             <Archive />
             <h3>No instruments match your criteria</h3>
-            <p>Try adjusting your search or filters.</p>
+            <p>Try adjusting your search query or filters.</p>
           </div>
         ) : (
           <>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Instrument ID</th><th>Manufacturer</th><th>Model</th><th>Serial #</th>
-                  <th>Class</th><th>Status</th><th>Last Result</th><th>Tests</th><th>Reports</th>
+                  <th>Instrument ID</th>
+                  <th>Manufacturer</th>
+                  <th>Model</th>
+                  <th>Serial #</th>
+                  <th>Class</th>
+                  <th>Status</th>
+                  <th>Last Result</th>
+                  <th>Tests</th>
+                  <th>Reports</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +120,7 @@ export default function RepositoryPage() {
                     <td className="mono" style={{ fontSize: 11 }}>{inst.serial_number}</td>
                     <td>{inst.accuracy_class}</td>
                     <td><span className={`status-badge ${inst.status.replace('_', '-')}`}>{inst.status.replace('_', ' ')}</span></td>
-                    <td><span className={`status-badge ${inst.latestResult}`}>{inst.latestResult}</span></td>
+                    <td><span className={`status-badge ${inst.latestResult}`}>{inst.latestResult.toUpperCase()}</span></td>
                     <td style={{ fontSize: 11 }}>{inst.completed}/{inst.sessions}</td>
                     <td style={{ fontSize: 11 }}>{inst.reportCount}</td>
                   </tr>

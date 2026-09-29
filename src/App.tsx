@@ -16,10 +16,19 @@ import AuditPage from './pages/AuditPage';
 import UsersPage from './pages/UsersPage';
 import RulesPage from './pages/RulesPage';
 import SettingsPage from './pages/SettingsPage';
+import type { UserRole } from './types';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAppStore(s => s.isAuthenticated);
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
+function RoleRoute({ roles, children }: { roles: UserRole[]; children: React.ReactNode }) {
+  const currentUser = useAppStore(s => s.currentUser);
+  if (!currentUser || !roles.includes(currentUser.role)) {
+    return <Navigate to="/" replace />;
+  }
   return <>{children}</>;
 }
 
@@ -41,9 +50,9 @@ function App() {
           <Route path="reports/:id" element={<ReportDetailPage />} />
           <Route path="repository" element={<RepositoryPage />} />
           <Route path="audit" element={<AuditPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="rules" element={<RulesPage />} />
-          <Route path="settings" element={<SettingsPage />} />
+          <Route path="users" element={<RoleRoute roles={['admin']}><UsersPage /></RoleRoute>} />
+          <Route path="rules" element={<RoleRoute roles={['admin', 'reviewer']}><RulesPage /></RoleRoute>} />
+          <Route path="settings" element={<RoleRoute roles={['admin']}><SettingsPage /></RoleRoute>} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

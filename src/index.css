@@ -368,6 +368,35 @@ input, textarea, select, button {
   color: var(--steel);
 }
 
+.filter-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filter-search input {
+  width: 100%;
+  padding: 6px 10px 6px 30px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  color: var(--off-white);
+  font-size: 12px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.filter-search input:focus { border-color: var(--border-focus); }
+
+.filter-search svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--steel);
+  pointer-events: none;
+}
+
 .header-actions {
   display: flex;
   align-items: center;

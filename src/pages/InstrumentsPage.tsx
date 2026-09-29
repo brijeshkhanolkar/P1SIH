@@ -43,8 +43,8 @@ export default function InstrumentsPage() {
 
       {/* Filters */}
       <div className="filter-bar">
-        <div className="header-search" style={{ width: 260 }}>
-          <Search />
+        <div className="filter-search" style={{ width: 280 }}>
+          <Search size={14} />
           <input
             type="text" className="form-input"
             placeholder="Search by ID, manufacturer, model…"

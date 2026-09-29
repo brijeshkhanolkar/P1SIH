@@ -83,8 +83,8 @@ export default function TestingPage() {
                     <td><span className={`status-badge ${s.result}`}>{s.result}</span></td>
                     <td style={{ fontSize: 11, color: 'var(--steel-light)' }}>{new Date(s.completed_at || '').toLocaleString()}</td>
                     <td>
-                      <button className="btn btn-sm btn-ghost" onClick={() => navigate(`/instruments/${s.instrument_id}`)}>
-                        View <ArrowRight size={11} />
+                      <button className="btn btn-sm btn-ghost" onClick={() => navigate(`/testing/${s.id}`)}>
+                        Review <ArrowRight size={11} />
                       </button>
                     </td>
                   </tr>

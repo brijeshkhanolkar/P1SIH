@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useAppStore } from '../lib/store';
-import { ScrollText, Search, Filter } from 'lucide-react';
+import { ScrollText, Search, Download } from 'lucide-react';
 
 export default function AuditPage() {
   const { auditLogs } = useAppStore();
@@ -20,17 +20,51 @@ export default function AuditPage() {
     });
   }, [auditLogs, search, userFilter, entityFilter]);
 
+  const handleExportCSV = () => {
+    const headers = ['Timestamp', 'User', 'Role', 'Entity Type', 'Entity ID', 'Action', 'Details'];
+    const rows = filtered.map(l => [
+      `"${new Date(l.timestamp).toISOString()}"`,
+      `"${l.user_name.replace(/"/g, '""')}"`,
+      `"${l.user_role}"`,
+      `"${l.entity_type}"`,
+      `"${l.entity_id}"`,
+      `"${l.action.replace(/"/g, '""')}"`,
+      `"${l.details.replace(/"/g, '""')}"`,
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `audit_trail_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div>
       <div className="page-header">
-        <h2>Audit Trail</h2>
-        <p>Complete record of all system events, user actions and automated operations.</p>
+        <div className="page-header-row">
+          <div>
+            <h2>Audit Trail</h2>
+            <p>Tamper-evident record of all metrological events, test results, and laboratory approvals.</p>
+          </div>
+          <button className="btn btn-secondary" onClick={handleExportCSV}>
+            <Download size={14} /> Export CSV
+          </button>
+        </div>
       </div>
 
       <div className="filter-bar">
-        <div className="header-search" style={{ width: 260 }}>
-          <Search />
-          <input type="text" className="form-input" placeholder="Search audit events…" value={search} onChange={e => setSearch(e.target.value)} />
+        <div className="filter-search" style={{ width: 280 }}>
+          <Search size={14} />
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Search audit events, users, actions…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
         </div>
         <select className="form-select" value={userFilter} onChange={e => setUserFilter(e.target.value)}>
           <option value="">All Users</option>
@@ -51,7 +85,7 @@ export default function AuditPage() {
           </div>
         ) : (
           <div className="audit-timeline">
-            {filtered.slice(0, 50).map(log => (
+            {filtered.slice(0, 100).map(log => (
               <div key={log.id} className={`audit-entry ${log.user_id === 'system' ? 'system' : 'user'}`}>
                 <div className="audit-timestamp">
                   {new Date(log.timestamp).toLocaleString()}

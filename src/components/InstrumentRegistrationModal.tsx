@@ -40,6 +40,17 @@ export default function InstrumentRegistrationModal({ onClose }: Props) {
     setErrors(e => ({ ...e, [field]: '' }));
   };
 
+  const autoCalculateMin = () => {
+    const eVal = parseFloat(form.verification_interval);
+    if (isNaN(eVal) || eVal <= 0) return;
+    let multiplier = 20;
+    if (form.accuracy_class === 'I') multiplier = 100;
+    else if (form.accuracy_class === 'II') multiplier = 20;
+    else if (form.accuracy_class === 'III') multiplier = 20;
+    else if (form.accuracy_class === 'IIII') multiplier = 10;
+    set('min_capacity', String(eVal * multiplier));
+  };
+
   const validate = (): boolean => {
     const errs: Record<string, string> = {};
     if (!form.manufacturer.trim()) errs.manufacturer = 'Manufacturer is required.';
@@ -156,7 +167,18 @@ export default function InstrumentRegistrationModal({ onClose }: Props) {
 
           <div className="form-row-3">
             <div className="form-group">
-              <label className="form-label">Min Capacity (Min) <span className="required">*</span></label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <label className="form-label" style={{ margin: 0 }}>Min Capacity (Min) <span className="required">*</span></label>
+                <button 
+                  type="button" 
+                  onClick={autoCalculateMin}
+                  className="btn-ghost" 
+                  style={{ padding: '0 4px', fontSize: '0.68rem', color: 'var(--amber)', height: 'auto', textDecoration: 'underline', border: 'none', background: 'transparent', cursor: 'pointer' }}
+                  title="Auto calculate Min based on Accuracy Class OIML R-76 Table 3 rules"
+                >
+                  ⚡ Auto
+                </button>
+              </div>
               <input className={`form-input ${errors.min_capacity ? 'error' : ''}`} type="number" step="any" value={form.min_capacity} onChange={e => set('min_capacity', e.target.value)} placeholder="e.g. 100" />
               {errors.min_capacity && <div className="form-error">{errors.min_capacity}</div>}
             </div>

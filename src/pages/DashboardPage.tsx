@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../lib/store';
 import {
   Scale, FlaskConical, CheckCircle2, XCircle, AlertTriangle,
-  ArrowRight, Clock, TrendingUp, RotateCcw
+  ArrowRight, Clock, Plus, FileText, RotateCcw
 } from 'lucide-react';
+import InstrumentRegistrationModal from '../components/InstrumentRegistrationModal';
 
 function AnimatedNumber({ value, suffix = '' }: { value: number; suffix?: string }) {
   const [display, setDisplay] = useState(0);
@@ -26,6 +27,7 @@ function AnimatedNumber({ value, suffix = '' }: { value: number; suffix?: string
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { dashboardMetrics: m, testSessions, instruments, recalculateMetrics } = useAppStore();
+  const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => { recalculateMetrics(); }, []);
 
@@ -38,8 +40,20 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="page-header">
-        <h2>Testing Overview</h2>
-        <p>Monitor instrument evaluations, active tests and compliance.</p>
+        <div className="page-header-row">
+          <div>
+            <h2>Testing Overview</h2>
+            <p>Monitor laboratory instrument evaluations, active tests, and metrological compliance.</p>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="btn btn-secondary" onClick={() => navigate('/reports')}>
+              <FileText size={14} /> View Reports
+            </button>
+            <button className="btn btn-primary" onClick={() => setShowRegister(true)}>
+              <Plus size={14} /> Register Instrument
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Metrics Grid */}
@@ -96,7 +110,7 @@ export default function DashboardPage() {
           <div className="empty-state" style={{ padding: '24px 0' }}>
             <FlaskConical />
             <h3>No active test sessions</h3>
-            <p>Start a new test from the Instruments page.</p>
+            <p>Start a new test from the Instruments page or test plan.</p>
           </div>
         ) : (
           <table className="data-table">
@@ -171,7 +185,6 @@ export default function DashboardPage() {
             <tbody>
               {recentCompleted.map(session => {
                 const inst = instruments.find(i => i.id === session.instrument_id);
-                const lastAttempt = session.attempts[session.attempts.length - 1];
                 return (
                   <tr key={session.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/instruments/${session.instrument_id}`)}>
                     <td className="mono">{inst?.instrument_id || '—'}</td>
@@ -198,6 +211,8 @@ export default function DashboardPage() {
           </table>
         )}
       </div>
+
+      {showRegister && <InstrumentRegistrationModal onClose={() => setShowRegister(false)} />}
     </div>
   );
 }

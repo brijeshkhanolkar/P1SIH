@@ -3,6 +3,7 @@
 // ============================================================
 
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import type {
   User, Instrument, InstrumentConfiguration, TestPlan, TestSession,
@@ -30,6 +31,8 @@ interface AppState {
   isAuthenticated: boolean;
   login: (email: string, password: string) => boolean;
   logout: () => void;
+  switchUserRole: (role: UserRole) => void;
+  resetToDefaults: () => void;
 
   // Users
   users: User[];
@@ -74,6 +77,7 @@ interface AppState {
   generateReport: (instrumentId: string, reportType: 'standard' | 'detailed' | 'retest') => Report;
   getReport: (id: string) => Report | undefined;
   getReportsForInstrument: (instrumentId: string) => Report[];
+  approveReport: (reportId: string, notes?: string) => void;
 
   // Audit
   auditLogs: AuditLog[];
@@ -121,67 +125,114 @@ function generateReportNumber(reports: Report[]): string {
 // -------------------------------------------------------
 // Create Store
 // -------------------------------------------------------
-export const useAppStore = create<AppState>((set, get) => ({
-  // --- Auth ---
-  currentUser: null,
-  isAuthenticated: false,
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      // --- Auth ---
+      currentUser: null,
+      isAuthenticated: false,
 
-  login: (email: string, _password: string) => {
-    const user = DEMO_USERS.find(u => u.email === email);
-    if (user) {
-      set({ currentUser: user, isAuthenticated: true });
-      get().addAuditLog('User logged in', 'user', user.id, `${user.full_name} logged in`);
-      return true;
-    }
-    // Demo: any email works, default to operator
-    const demoUser: User = {
-      id: uuidv4(),
-      email,
-      full_name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-      role: 'operator',
-      created_at: new Date().toISOString(),
-      is_active: true,
-    };
-    set({ currentUser: demoUser, isAuthenticated: true });
-    return true;
-  },
+      login: (email: string, _password: string) => {
+        const user = DEMO_USERS.find(u => u.email === email);
+        if (user) {
+          set({ currentUser: user, isAuthenticated: true });
+          get().addAuditLog('User logged in', 'user', user.id, `${user.full_name} logged in`);
+          return true;
+        }
+        // Demo: any email works, default to operator
+        const demoUser: User = {
+          id: uuidv4(),
+          email,
+          full_name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+          role: 'operator',
+          created_at: new Date().toISOString(),
+          is_active: true,
+        };
+        set({ currentUser: demoUser, isAuthenticated: true });
+        return true;
+      },
 
-  logout: () => {
-    const user = get().currentUser;
-    if (user) {
-      get().addAuditLog('User logged out', 'user', user.id, `${user.full_name} logged out`);
-    }
-    set({ currentUser: null, isAuthenticated: false });
-  },
+      logout: () => {
+        const user = get().currentUser;
+        if (user) {
+          get().addAuditLog('User logged out', 'user', user.id, `${user.full_name} logged out`);
+        }
+        set({ currentUser: null, isAuthenticated: false });
+      },
 
-  // --- Users ---
-  users: [...DEMO_USERS],
+      switchUserRole: (role: UserRole) => {
+        const target = DEMO_USERS.find(u => u.role === role);
+        if (target) {
+          set({ currentUser: target, isAuthenticated: true });
+          get().addAuditLog('Switched persona', 'user', target.id, `Active operator switched to ${target.full_name} (${role})`);
+        }
+      },
 
-  // --- Instruments ---
-  instruments: [...DEMO_INSTRUMENTS],
+      resetToDefaults: () => {
+        set({
+          instruments: [...DEMO_INSTRUMENTS],
+          configurations: [...DEMO_CONFIGURATIONS],
+          testPlans: [...DEMO_TEST_PLANS],
+          testSessions: [...DEMO_TEST_SESSIONS],
+          evidence: [],
+          reports: [...DEMO_REPORTS],
+          auditLogs: [...DEMO_AUDIT_LOGS],
+          notifications: [...DEMO_NOTIFICATIONS],
+          ruleVersions: [...DEMO_RULE_VERSIONS],
+          activeRuleVersion: DEMO_RULE_VERSIONS[0],
+          dashboardMetrics: { ...DEMO_DASHBOARD_METRICS },
+        });
+        get().recalculateMetrics();
+        get().addAuditLog('Reset laboratory data', 'system', 'system', 'Reset all instruments and test records to factory calibration state');
+      },
 
-  addInstrument: (data) => {
-    const instruments = get().instruments;
-    const instrumentId = generateInstrumentId(instruments);
-    const n = Math.floor(data.max_capacity / data.verification_interval);
-    const newInstrument: Instrument = {
-      ...data,
-      id: uuidv4(),
-      instrument_id: instrumentId,
-      num_verification_intervals: n,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    set({ instruments: [...instruments, newInstrument] });
-    get().addAuditLog(
-      'Registered instrument',
-      'instrument',
-      newInstrument.id,
-      `Registered ${instrumentId} (${data.manufacturer} ${data.model})`
-    );
-    get().recalculateMetrics();
-    return newInstrument;
-  },
+      // --- Users ---
+      users: [...DEMO_USERS],
+
+      // --- Instruments ---
+      instruments: [...DEMO_INSTRUMENTS],
+
+      addInstrument: (data) => {
+        const instruments = get().instruments;
+        const instrumentId = generateInstrumentId(instruments);
+        const n = Math.floor(data.max_capacity / data.verification_interval);
+        const newInstrument: Instrument = {
+          ...data,
+          id: uuidv4(),
+          instrument_id: instrumentId,
+          num_verification_intervals: n,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        // Also auto-create a matching initial configuration so test plan generation is immediately ready
+        const newConfig: InstrumentConfiguration = {
+          id: uuidv4(),
+          instrument_id: newInstrument.id,
+          accuracy_class: newInstrument.accuracy_class,
+          max_capacity: newInstrument.max_capacity,
+          verification_interval: newInstrument.verification_interval,
+          num_verification_intervals: n,
+          min_capacity: newInstrument.min_capacity,
+          unit: newInstrument.unit,
+          rule_version_id: 'r76-v1',
+          is_valid: true,
+          validation_errors: [],
+          configured_by: get().currentUser?.id || 'system',
+          configured_at: new Date().toISOString(),
+        };
+        set(state => ({
+          instruments: [...state.instruments, newInstrument],
+          configurations: [...state.configurations, newConfig],
+        }));
+        get().addAuditLog(
+          'Registered instrument',
+          'instrument',
+          newInstrument.id,
+          `Registered ${instrumentId} (${data.manufacturer} ${data.model}) with auto-configuration`
+        );
+        get().recalculateMetrics();
+        return newInstrument;
+      },
 
   updateInstrument: (id, data) => {
     set(state => ({
@@ -252,8 +303,20 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   generateTestPlan: (instrumentId) => {
     const instrument = get().getInstrument(instrumentId);
-    const config = get().getConfiguration(instrumentId);
-    if (!instrument || !config) throw new Error('Instrument not configured');
+    if (!instrument) throw new Error('Instrument not found');
+
+    let config = get().getConfiguration(instrumentId);
+    if (!config) {
+      config = get().saveConfiguration(instrumentId, {
+        accuracy_class: instrument.accuracy_class,
+        max_capacity: instrument.max_capacity,
+        verification_interval: instrument.verification_interval,
+        num_verification_intervals: instrument.num_verification_intervals,
+        min_capacity: instrument.min_capacity,
+        unit: instrument.unit,
+        rule_version_id: 'r76-v1',
+      });
+    }
 
     const ruleVersion = get().activeRuleVersion;
     const testLoads = generateTestLoads(
@@ -606,6 +669,37 @@ export const useAppStore = create<AppState>((set, get) => ({
   getReportsForInstrument: (instrumentId) =>
     get().reports.filter(r => r.instrument_id === instrumentId),
 
+  approveReport: (reportId, notes) => {
+    const user = get().currentUser;
+    const reviewerName = user?.full_name || 'Authorized Reviewer';
+    const hash = 'SHA256:' + Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+    set(state => ({
+      reports: state.reports.map(r => {
+        if (r.id !== reportId) return r;
+        return {
+          ...r,
+          reviewed_by: user?.id || 'user-003',
+          reviewed_by_name: reviewerName,
+          reviewed_at: new Date().toISOString(),
+          approval_status: 'approved',
+          signature_hash: hash,
+        };
+      }),
+    }));
+    get().addAuditLog(
+      'Approved report',
+      'report',
+      reportId,
+      `Report approved and digitally signed by ${reviewerName} (${hash})${notes ? ` — Notes: ${notes}` : ''}`
+    );
+    get().addNotification({
+      title: 'Report Approved',
+      message: `Report has been approved and digitally signed by ${reviewerName}`,
+      type: 'success',
+      action_url: `/reports/${reportId}`,
+    });
+  },
+
   // --- Audit Logs ---
   auditLogs: [...DEMO_AUDIT_LOGS],
 
@@ -691,4 +785,23 @@ export const useAppStore = create<AppState>((set, get) => ({
       instrumentFilters: { ...state.instrumentFilters, ...filters },
     }));
   },
-}));
+    }),
+    {
+      name: 'nawi-metrology-storage-v2',
+      partialize: (state) => ({
+        currentUser: state.currentUser,
+        isAuthenticated: state.isAuthenticated,
+        instruments: state.instruments,
+        configurations: state.configurations,
+        testPlans: state.testPlans,
+        testSessions: state.testSessions,
+        evidence: state.evidence,
+        reports: state.reports,
+        auditLogs: state.auditLogs,
+        notifications: state.notifications,
+        ruleVersions: state.ruleVersions,
+        activeRuleVersion: state.activeRuleVersion,
+      }),
+    }
+  )
+);

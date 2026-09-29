@@ -218,7 +218,10 @@ export interface Report {
   generated_by_name: string;
   generated_at: string;
   reviewed_by?: string;
+  reviewed_by_name?: string;
   reviewed_at?: string;
+  approval_status?: 'pending' | 'approved';
+  signature_hash?: string;
   rule_version: string;
   organization_name: string;
 }
