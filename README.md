@@ -332,8 +332,8 @@ A complete, stage-ready presentation script has been crafted for hackathon prese
 👉 **Read the full script:** [`PRESENTATION_SCRIPT.md`](./PRESENTATION_SCRIPT.md)
 
 It contains:
-* **7-Minute Hackathon Pitch Script** with exact speaker notes and slide breakdown.
-* **Live Demo Clickthrough Route** showing exactly what to click and say at each step.
+* **3-Minute Hackathon Pitch Script (180s Master Flow)** with exact speaker notes, screen sequence, and visual timestamps.
+* **Live Demo Clickthrough Route** across the 5 core screens with zero-lag tab shortcuts (`Ctrl+1` through `Ctrl+5`).
 * **Metrology Q&A Defense Guide** with answers to anticipated technical questions from judges regarding OIML R-76, turning point calculations, and digital data integrity.
 
 ---

@@ -1,19 +1,19 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppStore } from '../lib/store';
-import { Archive, Search } from 'lucide-react';
+import { Archive, Search, Scale, Play, Eye } from 'lucide-react';
 
 export default function RepositoryPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
-  const { instruments, testSessions, reports } = useAppStore();
+  const { instruments, testSessions, reports, startTestingForInstrument } = useAppStore();
   const [search, setSearch] = useState(queryParam);
   const [statusFilter, setStatusFilter] = useState('');
   const [classFilter, setClassFilter] = useState('');
   const [resultFilter, setResultFilter] = useState('');
   const [page, setPage] = useState(1);
-  const pageSize = 12;
+  const pageSize = 10;
 
   useEffect(() => {
     if (queryParam) {
@@ -48,98 +48,131 @@ export default function RepositoryPage() {
   const totalPages = Math.ceil(filtered.length / pageSize);
 
   return (
-    <div>
-      <div className="page-header">
-        <h2>Instrument Repository</h2>
-        <p>Searchable central archive of all registered instruments, technical records, and verification outcomes.</p>
+    <div className="animate-entrance" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div className="page-hero">
+        <div>
+          <div className="text-tech-amber" style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Archive size={14} /> HISTORICAL METROLOGY ARCHIVE
+          </div>
+          <h1 className="page-hero-title">
+            Equipment Repository Archive
+          </h1>
+          <p className="page-hero-subtitle">
+            Long-term archive of all certified weighing equipment, lifetime test session records, and regulatory reports.
+          </p>
+        </div>
       </div>
 
-      <div className="filter-bar">
-        <div className="filter-search" style={{ width: 280 }}>
-          <Search size={14} />
+      <div className="filter-shelf">
+        <div className="search-box-precision">
+          <Search size={15} color="var(--text-muted)" />
           <input
             type="text"
-            className="form-input"
-            placeholder="Search by ID, serial, model…"
+            placeholder="Search by serial number, model, or manufacturer…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
         </div>
-        <select className="form-select" value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}>
-          <option value="">All Status</option>
-          <option value="compliant">Compliant</option>
-          <option value="non_compliant">Non-Compliant</option>
-          <option value="under_test">Under Test</option>
-          <option value="configured">Configured</option>
-          <option value="registered">Registered</option>
-        </select>
-        <select className="form-select" value={classFilter} onChange={e => { setClassFilter(e.target.value); setPage(1); }}>
-          <option value="">All Classes</option>
-          <option value="I">Class I</option>
-          <option value="II">Class II</option>
-          <option value="III">Class III</option>
-          <option value="IIII">Class IIII</option>
-        </select>
-        <select className="form-select" value={resultFilter} onChange={e => { setResultFilter(e.target.value); setPage(1); }}>
-          <option value="">All Results</option>
-          <option value="pass">Passed</option>
-          <option value="fail">Failed</option>
-          <option value="pending">Pending</option>
-        </select>
+
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <select className="form-select" value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}>
+            <option value="">ALL STATUS</option>
+            <option value="compliant">COMPLIANT</option>
+            <option value="non_compliant">NON-COMPLIANT</option>
+            <option value="under_test">UNDER TEST</option>
+            <option value="configured">CONFIGURED</option>
+            <option value="registered">REGISTERED</option>
+          </select>
+          <select className="form-select" value={classFilter} onChange={e => { setClassFilter(e.target.value); setPage(1); }}>
+            <option value="">ALL CLASSES</option>
+            <option value="I">CLASS I</option>
+            <option value="II">CLASS II</option>
+            <option value="III">CLASS III</option>
+            <option value="IIII">CLASS IIII</option>
+          </select>
+        </div>
       </div>
 
-      <div className="card">
+      <div className="tech-table-container">
         {filtered.length === 0 ? (
-          <div className="empty-state">
-            <Archive />
-            <h3>No instruments match your criteria</h3>
-            <p>Try adjusting your search query or filters.</p>
+          <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <Archive size={36} style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem' }}>NO ARCHIVE RECORDS FOUND</div>
           </div>
         ) : (
-          <>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Instrument ID</th>
-                  <th>Manufacturer</th>
-                  <th>Model</th>
-                  <th>Serial #</th>
-                  <th>Class</th>
-                  <th>Status</th>
-                  <th>Last Result</th>
-                  <th>Tests</th>
-                  <th>Reports</th>
+          <table className="tech-table">
+            <thead>
+              <tr>
+                <th>SERIAL / ID</th>
+                <th>MANUFACTURER & MODEL</th>
+                <th>CLASS</th>
+                <th>STATUS</th>
+                <th>VERDICT</th>
+                <th>COMPLETED TESTS</th>
+                <th>REPORTS</th>
+                <th style={{ textAlign: 'right' }}>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginated.map(inst => (
+                <tr key={inst.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/instruments/${inst.id}`)}>
+                  <td>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.85rem' }}>
+                      {inst.serial_number}
+                    </div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--amber)' }}>
+                      {inst.instrument_id}
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{inst.manufacturer} {inst.model}</div>
+                  </td>
+                  <td>
+                    <span className={`badge-class-${inst.accuracy_class.toLowerCase()}`}>
+                      CLASS {inst.accuracy_class}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`status-badge ${inst.status.replace('_', '-')}`}>
+                      {inst.status.replace('_', ' ').toUpperCase()}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`status-badge ${inst.latestResult}`}>
+                      {inst.latestResult.toUpperCase()}
+                    </span>
+                  </td>
+                  <td style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>
+                    {inst.completed} / {inst.sessions}
+                  </td>
+                  <td style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--amber)' }}>
+                    {inst.reportCount} issued
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'inline-flex', gap: '0.4rem' }} onClick={e => e.stopPropagation()}>
+                      <button
+                        className="btn-precision-amber"
+                        onClick={() => {
+                          const sid = startTestingForInstrument(inst.id, 'accuracy');
+                          navigate(`/testing/${sid}`);
+                        }}
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.7rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                      >
+                        <Play size={11} fill="currentColor" /> TEST
+                      </button>
+                      <button
+                        className="btn-precision-ghost"
+                        onClick={() => navigate(`/instruments/${inst.id}`)}
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.7rem' }}
+                      >
+                        <Eye size={11} /> VIEW
+                      </button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {paginated.map(inst => (
-                  <tr key={inst.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/instruments/${inst.id}`)}>
-                    <td className="mono" style={{ fontWeight: 600 }}>{inst.instrument_id}</td>
-                    <td>{inst.manufacturer}</td>
-                    <td>{inst.model}</td>
-                    <td className="mono" style={{ fontSize: 11 }}>{inst.serial_number}</td>
-                    <td>{inst.accuracy_class}</td>
-                    <td><span className={`status-badge ${inst.status.replace('_', '-')}`}>{inst.status.replace('_', ' ')}</span></td>
-                    <td><span className={`status-badge ${inst.latestResult}`}>{inst.latestResult.toUpperCase()}</span></td>
-                    <td style={{ fontSize: 11 }}>{inst.completed}/{inst.sessions}</td>
-                    <td style={{ fontSize: 11 }}>{inst.reportCount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {totalPages > 1 && (
-              <div className="pagination">
-                <span>Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} of {filtered.length}</span>
-                <div className="pagination-controls">
-                  <button className="pagination-btn" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>←</button>
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button key={i} className={`pagination-btn ${page === i + 1 ? 'active' : ''}`} onClick={() => setPage(i + 1)}>{i + 1}</button>
-                  ))}
-                  <button className="pagination-btn" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>→</button>
-                </div>
-              </div>
-            )}
-          </>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

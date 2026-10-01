@@ -1,12 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../lib/store';
-import { Plus, Search, Scale, Filter, ChevronDown, ArrowRight, Play, Eye, History, Sparkles } from 'lucide-react';
+import {
+  Plus, Search, Scale, Filter, ChevronDown, ArrowRight,
+  Play, Eye, History, Sparkles, CheckCircle2, AlertTriangle,
+  Clock, ShieldCheck
+} from 'lucide-react';
 import InstrumentRegistrationModal from '../components/InstrumentRegistrationModal';
 
 export default function InstrumentsPage() {
   const navigate = useNavigate();
-  const { instruments, testSessions } = useAppStore();
+  const { instruments, testSessions, setQuickTestOpen, startTestingForInstrument } = useAppStore();
   const [showRegister, setShowRegister] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -14,6 +18,10 @@ export default function InstrumentsPage() {
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 10;
+
+  const compliantCount = instruments.filter(i => i.status === 'compliant').length;
+  const underTestCount = instruments.filter(i => i.status === 'under_test').length;
+  const nonCompliantCount = instruments.filter(i => i.status === 'non_compliant').length;
 
   const filtered = useMemo(() => {
     return instruments.filter(i => {
@@ -38,7 +46,7 @@ export default function InstrumentsPage() {
           background: 'var(--pass-green-dim)', padding: '0.2rem 0.55rem', borderRadius: 3,
           border: '1px solid var(--pass-green-border)'
         }}>
-          COMPLIANT
+          <CheckCircle2 size={11} /> COMPLIANT
         </span>
       );
     }
@@ -50,7 +58,7 @@ export default function InstrumentsPage() {
           background: 'var(--fail-red-dim)', padding: '0.2rem 0.55rem', borderRadius: 3,
           border: '1px solid var(--fail-red-border)'
         }}>
-          NON-COMPLIANT
+          <AlertTriangle size={11} /> NON-COMPLIANT
         </span>
       );
     }
@@ -88,33 +96,62 @@ export default function InstrumentsPage() {
   };
 
   return (
-    <div className="animate-entrance">
+    <div className="animate-entrance" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Header */}
       <div className="page-hero">
         <div>
-          <div className="text-tech-amber" style={{ marginBottom: '0.4rem' }}>
-            OIML R-76 INSTRUMENT REGISTRY
+          <div className="text-tech-amber" style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Scale size={14} /> OIML R-76 WEIGHING INSTRUMENTS REGISTRY
           </div>
           <h1 className="page-hero-title">
-            INSTRUMENTS DIRECTORY
+            Weighing Instruments Directory
           </h1>
           <p className="page-hero-subtitle">
-            Manage registered non-automatic weighing equipment, verification state, and metrological parameters.
+            Manage laboratory balances, commercial scales, and industrial weighbridges. Click <strong>Test Scale</strong> to begin guided OIML verification.
           </p>
         </div>
 
-        <button className="btn-precision-amber" onClick={() => setShowRegister(true)}>
-          <Plus size={15} /> REGISTER INSTRUMENT
+        <button className="btn-precision-amber" onClick={() => setShowRegister(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Plus size={15} /> REGISTER NEW SCALE
         </button>
       </div>
 
-      {/* Filter and Command Strip */}
-      <div className="filter-bar">
-        <div className="filter-search">
-          <Search size={14} color="var(--steel-light)" />
+      {/* Summary Stat Pills */}
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div style={{ padding: '0.6rem 1rem', background: 'var(--bg-panel)', borderRadius: 6, border: '1px solid var(--slate-border)', display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem' }}>
+          <Scale size={15} color="var(--steel-light)" />
+          <span style={{ color: 'var(--text-secondary)' }}>Total Scales:</span>
+          <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{instruments.length}</span>
+        </div>
+
+        <div style={{ padding: '0.6rem 1rem', background: 'var(--bg-panel)', borderRadius: 6, border: '1px solid var(--slate-border)', display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem' }}>
+          <CheckCircle2 size={15} color="var(--pass-green)" />
+          <span style={{ color: 'var(--text-secondary)' }}>Compliant:</span>
+          <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--pass-green-light)' }}>{compliantCount}</span>
+        </div>
+
+        <div style={{ padding: '0.6rem 1rem', background: 'var(--bg-panel)', borderRadius: 6, border: '1px solid var(--slate-border)', display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem' }}>
+          <Clock size={15} color="var(--amber)" />
+          <span style={{ color: 'var(--text-secondary)' }}>Under Test:</span>
+          <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--amber-light)' }}>{underTestCount}</span>
+        </div>
+
+        {nonCompliantCount > 0 && (
+          <div style={{ padding: '0.6rem 1rem', background: 'var(--bg-panel)', borderRadius: 6, border: '1px solid var(--slate-border)', display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem' }}>
+            <AlertTriangle size={15} color="var(--fail-red)" />
+            <span style={{ color: 'var(--text-secondary)' }}>Non-Compliant:</span>
+            <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--fail-red-light)' }}>{nonCompliantCount}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="filter-shelf">
+        <div className="search-box-precision">
+          <Search size={15} color="var(--text-muted)" />
           <input
             type="text"
-            placeholder="Search by serial number, model, manufacturer, location..."
+            placeholder="Search by serial number, manufacturer, model, or lab room…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
@@ -143,20 +180,20 @@ export default function InstrumentsPage() {
             style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}
           >
             <option value="">ALL ACCURACY CLASSES</option>
-            <option value="I">CLASS I (SPECIAL)</option>
-            <option value="II">CLASS II (HIGH)</option>
-            <option value="III">CLASS III (MEDIUM)</option>
-            <option value="IIII">CLASS IIII (ORDINARY)</option>
+            <option value="I">CLASS I (SPECIAL - ANALYTICAL)</option>
+            <option value="II">CLASS II (HIGH - PRECISION)</option>
+            <option value="III">CLASS III (MEDIUM - COMMERCIAL)</option>
+            <option value="IIII">CLASS IIII (ORDINARY - WEIGHBRIDGE)</option>
           </select>
         </div>
       </div>
 
-      {/* High-Density Engineering Table */}
+      {/* Instruments Table */}
       <div className="tech-table-container">
         {filtered.length === 0 ? (
           <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
             <Scale size={36} style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem' }}>NO MATCHING METROLOGY INSTRUMENTS</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem' }}>NO MATCHING WEIGHING INSTRUMENTS</div>
             <div style={{ fontSize: '0.78rem', marginTop: '0.35rem' }}>
               {search || statusFilter || classFilter ? 'Adjust search parameters or clear filters.' : 'Register an instrument to initialize laboratory evaluation.'}
             </div>
@@ -167,8 +204,8 @@ export default function InstrumentsPage() {
               <tr>
                 <th>IDENTIFIER / SERIAL</th>
                 <th>EQUIPMENT SPECIFICATION</th>
-                <th>CLASS</th>
-                <th>MAX / e / n</th>
+                <th>ACCURACY CLASS</th>
+                <th>CAPACITY & SCALE INTERVALS</th>
                 <th>STATUS</th>
                 <th>LOCATION</th>
                 <th style={{ textAlign: 'right' }}>ACTIONS</th>
@@ -209,10 +246,10 @@ export default function InstrumentsPage() {
 
                     <td>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--text-primary)' }}>
-                        {inst.max_capacity?.toLocaleString()} {inst.unit}
+                        Max: <strong>{inst.max_capacity?.toLocaleString()} {inst.unit}</strong>
                       </div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                        e={inst.verification_interval} {inst.unit} · n={inst.num_verification_intervals?.toLocaleString() || Math.round(inst.max_capacity / inst.verification_interval).toLocaleString()}
+                        e={inst.verification_interval} {inst.unit} · n={inst.num_verification_intervals?.toLocaleString() || Math.round(inst.max_capacity / inst.verification_interval).toLocaleString()} divisions
                       </div>
                     </td>
 
@@ -224,25 +261,38 @@ export default function InstrumentsPage() {
                     </td>
 
                     <td style={{ textAlign: 'right' }}>
-                      <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
+                      <div style={{ display: 'inline-flex', gap: '0.4rem' }} onClick={e => e.stopPropagation()}>
                         {activeSession ? (
                           <button
                             className="btn-precision-amber"
-                            style={{ padding: '0.35rem 0.65rem', fontSize: '0.68rem' }}
-                            onClick={(e) => { e.stopPropagation(); navigate(`/testing/${activeSession.id}`); }}
+                            style={{ padding: '0.35rem 0.65rem', fontSize: '0.7rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                            onClick={() => navigate(`/testing/${activeSession.id}`)}
                             title="Continue active test"
                           >
-                            <Play size={11} fill="currentColor" /> CONTINUE
+                            <Play size={11} fill="currentColor" /> RESUME ({activeSession.progress}%)
                           </button>
                         ) : (
                           <button
-                            className="btn-precision-ghost"
-                            style={{ padding: '0.35rem 0.65rem', fontSize: '0.68rem' }}
-                            onClick={(e) => { e.stopPropagation(); navigate(`/instruments/${inst.id}`); }}
+                            className="btn-precision-amber"
+                            style={{ padding: '0.35rem 0.65rem', fontSize: '0.7rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                            onClick={() => {
+                              const sid = startTestingForInstrument(inst.id, 'accuracy');
+                              navigate(`/testing/${sid}`);
+                            }}
+                            title="Start guided verification test"
                           >
-                            <Eye size={12} /> DIAGNOSTICS
+                            <Play size={11} fill="currentColor" /> TEST SCALE
                           </button>
                         )}
+
+                        <button
+                          className="btn-precision-ghost"
+                          style={{ padding: '0.35rem 0.65rem', fontSize: '0.7rem', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                          onClick={() => navigate(`/instruments/${inst.id}`)}
+                          title="Inspect instrument specifications and configuration"
+                        >
+                          <Eye size={12} /> SPECS
+                        </button>
                       </div>
                     </td>
                   </tr>

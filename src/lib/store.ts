@@ -99,6 +99,18 @@ interface AppState {
   // Filters
   instrumentFilters: FilterState;
   setInstrumentFilters: (filters: Partial<FilterState>) => void;
+
+  // UI Helpers & Friendly Experience for New Users
+  quickTestOpen: boolean;
+  quickTestInstrumentId: string | null;
+  explainerOpen: boolean;
+  tourOpen: boolean;
+  viewMode: 'guided' | 'expert';
+  setQuickTestOpen: (open: boolean, instrumentId?: string | null) => void;
+  setExplainerOpen: (open: boolean) => void;
+  setTourOpen: (open: boolean) => void;
+  setViewMode: (mode: 'guided' | 'expert') => void;
+  startTestingForInstrument: (instrumentId: string, testType?: TestType) => string;
 }
 
 // -------------------------------------------------------
@@ -129,8 +141,8 @@ export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       // --- Auth ---
-      currentUser: null,
-      isAuthenticated: false,
+      currentUser: DEMO_USERS[0],
+      isAuthenticated: true,
 
       login: (email: string, _password: string) => {
         const user = DEMO_USERS.find(u => u.email === email);
@@ -784,6 +796,46 @@ export const useAppStore = create<AppState>()(
     set(state => ({
       instrumentFilters: { ...state.instrumentFilters, ...filters },
     }));
+  },
+
+  // --- UI Helpers & Easy Flow for New Users ---
+  quickTestOpen: false,
+  quickTestInstrumentId: null,
+  explainerOpen: false,
+  tourOpen: false,
+  viewMode: 'guided',
+  setQuickTestOpen: (open, instrumentId = null) => set({ quickTestOpen: open, quickTestInstrumentId: instrumentId }),
+  setExplainerOpen: (open) => set({ explainerOpen: open }),
+  setTourOpen: (open) => set({ tourOpen: open }),
+  setViewMode: (mode) => set({ viewMode: mode }),
+
+  startTestingForInstrument: (instrumentId: string, testType: TestType = 'accuracy') => {
+    const inst = get().getInstrument(instrumentId);
+    if (!inst) throw new Error('Instrument not found');
+
+    // 1. Ensure config
+    let config = get().getConfiguration(instrumentId);
+    if (!config) {
+      config = get().saveConfiguration(instrumentId, {
+        accuracy_class: inst.accuracy_class,
+        max_capacity: inst.max_capacity,
+        verification_interval: inst.verification_interval,
+        num_verification_intervals: inst.num_verification_intervals,
+        min_capacity: inst.min_capacity,
+        unit: inst.unit,
+        rule_version_id: 'r76-v1',
+      });
+    }
+
+    // 2. Ensure test plan
+    let plan = get().getTestPlan(instrumentId);
+    if (!plan) {
+      plan = get().generateTestPlan(instrumentId);
+    }
+
+    // 3. Start session
+    const session = get().startTestSession(plan.id, testType);
+    return session.id;
   },
     }),
     {

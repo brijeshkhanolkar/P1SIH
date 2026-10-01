@@ -26,20 +26,20 @@ function MPEVisualization({ error, mpe, result }: { error: number; mpe: number; 
     <div className="measurement-viz">
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
         <div>
-          <div style={{ fontSize: 10, color: 'var(--steel)', letterSpacing: 0.5, textTransform: 'uppercase' }}>Error</div>
-          <div style={{ fontSize: 16, fontFamily: 'var(--font-mono)', fontWeight: 600, color: result === 'pass' ? 'var(--green)' : 'var(--red)' }}>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase' }}>Error</div>
+          <div style={{ fontSize: 16, fontFamily: 'var(--font-mono)', fontWeight: 600, color: result === 'pass' ? 'var(--pass-green-light)' : 'var(--fail-red)' }}>
             {error >= 0 ? '+' : ''}{error.toFixed(4)}
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 10, color: 'var(--steel)', letterSpacing: 0.5, textTransform: 'uppercase' }}>MPE Band</div>
-          <div style={{ fontSize: 16, fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--off-white)' }}>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase' }}>MPE Band</div>
+          <div style={{ fontSize: 16, fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-primary)' }}>
             ±{mpe.toFixed(4)}
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 10, color: 'var(--steel)', letterSpacing: 0.5, textTransform: 'uppercase' }}>Margin</div>
-          <div style={{ fontSize: 16, fontFamily: 'var(--font-mono)', fontWeight: 600, color: result === 'pass' ? 'var(--green)' : 'var(--red)' }}>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase' }}>Margin</div>
+          <div style={{ fontSize: 16, fontFamily: 'var(--font-mono)', fontWeight: 600, color: result === 'pass' ? 'var(--pass-green-light)' : 'var(--fail-red)' }}>
             {result === 'pass' ? (mpe - absError).toFixed(4) : `−${(absError - mpe).toFixed(4)}`}
           </div>
         </div>
@@ -70,7 +70,7 @@ function ResultDisplay({ result, reason, formula }: { result: TestResult; reason
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
           <div className={`result-label ${result}`}>{result === 'pass' ? 'PASS — WITHIN MPE' : 'FAIL — EXCEEDS MPE'}</div>
           {formula && (
-            <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', background: 'rgba(0,0,0,0.2)', padding: '2px 6px', borderRadius: 2 }}>
+            <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', background: 'var(--purple-dim)', color: 'var(--purple-dark)', border: '1px solid var(--purple-border)', padding: '2px 6px', borderRadius: 4 }}>
               {formula}
             </span>
           )}
@@ -353,9 +353,9 @@ export default function TestExecutionPage() {
                     onClick={() => setSelectedAttemptIndex(i)}
                     style={{
                       padding: '4px 8px', borderRadius: 4, fontSize: 10, fontWeight: 600, cursor: 'pointer',
-                      border: safeAttemptIdx === i ? '2px solid var(--pure-white)' : '1px solid var(--border)',
-                      background: a.result === 'pass' ? 'var(--green-dim)' : a.result === 'fail' ? 'var(--red-dim)' : 'var(--amber-dim)',
-                      color: a.result === 'pass' ? 'var(--green)' : a.result === 'fail' ? 'var(--red)' : 'var(--amber)',
+                      border: safeAttemptIdx === i ? '2px solid var(--purple)' : '1px solid var(--slate-border)',
+                      background: a.result === 'pass' ? 'var(--pass-green-dim)' : a.result === 'fail' ? 'var(--fail-red-dim)' : 'var(--purple-dim)',
+                      color: a.result === 'pass' ? 'var(--pass-green-light)' : a.result === 'fail' ? 'var(--fail-red)' : 'var(--purple)',
                     }}
                   >
                     #{i + 1} {a.result !== 'in_progress' ? a.result.toUpperCase() : 'ACTIVE'}
@@ -372,18 +372,18 @@ export default function TestExecutionPage() {
           <div className="card animate-in" style={{ marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div>
-                <div style={{ fontSize: 10, color: 'var(--steel)', letterSpacing: 1, textTransform: 'uppercase' }}>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 1, textTransform: 'uppercase' }}>
                   Test {String(currentTestIdx + 1).padStart(2, '0')} / {String(planTests.length).padStart(2, '0')}
                 </div>
-                <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--pure-white)', textTransform: 'capitalize', margin: '4px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', textTransform: 'capitalize', margin: '4px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
                   {session.test_type} Test
                   {!isViewingActiveAttempt && (
-                    <span style={{ fontSize: 11, fontWeight: 500, padding: '2px 8px', borderRadius: 3, background: 'var(--charcoal)', color: 'var(--steel-light)' }}>
+                    <span style={{ fontSize: 11, fontWeight: 500, padding: '2px 8px', borderRadius: 3, background: 'var(--bg-base)', color: 'var(--text-secondary)' }}>
                       Viewing Attempt #{viewingAttempt.attempt_number} (Read Only)
                     </span>
                   )}
                 </h2>
-                <div style={{ fontSize: 11, color: 'var(--steel-light)' }}>
+                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
                   Attempt #{viewingAttempt.attempt_number} of {session.attempts.length} · Operator: {viewingAttempt.operator_name}
                 </div>
               </div>
@@ -391,13 +391,13 @@ export default function TestExecutionPage() {
                 <div className="progress-bar" style={{ width: 120 }}>
                   <div className="progress-bar-fill" style={{ width: `${session.progress}%` }} />
                 </div>
-                <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--steel-light)' }}>{session.progress}%</span>
+                <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{session.progress}%</span>
               </div>
             </div>
 
             {/* If viewing historical attempt */}
             {!isViewingActiveAttempt && (
-              <div style={{ padding: 12, background: 'var(--navy-mid)', border: '1px solid var(--border)', borderRadius: 4, marginBottom: 16, fontSize: 12, color: 'var(--off-white)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ padding: 12, background: 'var(--bg-void)', border: '1px solid var(--slate-border)', borderRadius: 6, marginBottom: 16, fontSize: 12, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
                   <strong>Viewing Historical Attempt #{viewingAttempt.attempt_number}:</strong> Recorded {viewingAttempt.measurements.length} readings with final status <strong>{viewingAttempt.result.toUpperCase()}</strong>.
                 </div>
@@ -413,11 +413,11 @@ export default function TestExecutionPage() {
             {/* Instruction */}
             {isViewingActiveAttempt && (
               <div style={{
-                padding: 12, background: 'var(--navy-mid)', border: '1px solid var(--border)',
-                borderRadius: 4, marginBottom: 16, fontSize: 12, color: 'var(--off-white)',
-                lineHeight: 1.6, borderLeft: '3px solid var(--amber)',
+                padding: 14, background: 'var(--purple-dim)', border: '1px solid var(--purple-border)',
+                borderRadius: 6, marginBottom: 16, fontSize: 12, color: 'var(--text-primary)',
+                lineHeight: 1.6, borderLeft: '4px solid var(--purple)',
               }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--amber)', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--purple)', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 4 }}>
                   Metrological Instruction
                 </div>
                 {getInstruction()}
@@ -431,7 +431,7 @@ export default function TestExecutionPage() {
                   <label className="form-label">
                     Reference Test Load (L)
                   </label>
-                  <div className="form-input" style={{ background: 'var(--navy-mid)', fontFamily: 'var(--font-mono)', color: 'var(--amber)' }}>
+                  <div className="form-input" style={{ background: 'var(--bg-base)', fontFamily: 'var(--font-mono)', color: 'var(--purple)', fontWeight: 700 }}>
                     {session.test_type === 'accuracy' ? (currentLoad ?? '—') :
                      session.test_type === 'eccentricity' ? eccLoad : repLoad} {config.unit}
                   </div>
@@ -499,7 +499,7 @@ export default function TestExecutionPage() {
                 {session.test_type === 'eccentricity' && (
                   <div className="form-group">
                     <label className="form-label">Position</label>
-                    <div className="form-input" style={{ background: 'var(--navy-mid)', textTransform: 'capitalize' }}>
+                    <div className="form-input" style={{ background: 'var(--bg-base)', textTransform: 'capitalize' }}>
                       {ECCENTRICITY_POSITIONS[activeMeasurements.length]?.label || 'Done'}
                     </div>
                   </div>
@@ -507,8 +507,8 @@ export default function TestExecutionPage() {
 
                 {/* Turning Point Method Toggle */}
                 {session.test_type === 'accuracy' && (
-                  <div style={{ gridColumn: '1 / -1', padding: '8px 12px', background: 'var(--navy-mid)', borderRadius: 4, border: '1px solid var(--border)' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 11, color: 'var(--off-white)', margin: 0 }}>
+                  <div style={{ gridColumn: '1 / -1', padding: '10px 14px', background: 'var(--bg-void)', borderRadius: 6, border: '1px solid var(--slate-border)' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: 'var(--text-primary)', margin: 0, fontWeight: 500 }}>
                       <input
                         type="checkbox"
                         checked={useTurningPoint}
@@ -530,8 +530,8 @@ export default function TestExecutionPage() {
                             style={{ fontFamily: 'var(--font-mono)' }}
                           />
                         </div>
-                        <div style={{ fontSize: 10, color: 'var(--steel-light)', display: 'flex', alignItems: 'center' }}>
-                          Turning point formula: <strong>E = I + ½d − ΔL − L</strong>
+                        <div style={{ fontSize: 11, color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+                          Turning point formula: <strong style={{ color: 'var(--purple)', marginLeft: 4 }}>E = I + ½d − ΔL − L</strong>
                         </div>
                       </div>
                     )}
@@ -540,8 +540,8 @@ export default function TestExecutionPage() {
 
                 {/* Live Formula Preview */}
                 {indicatedValue && !isNaN(parseFloat(indicatedValue)) && (
-                  <div style={{ gridColumn: '1 / -1', padding: '8px 12px', background: 'rgba(232, 133, 12, 0.08)', border: '1px solid rgba(232, 133, 12, 0.25)', borderRadius: 4, fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--off-white)' }}>
-                    <span style={{ color: 'var(--amber)', fontWeight: 600 }}>Calculation Preview: </span>
+                  <div style={{ gridColumn: '1 / -1', padding: '10px 14px', background: 'var(--purple-dim)', border: '1px solid var(--purple-border)', borderRadius: 6, fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
+                    <span style={{ color: 'var(--purple)', fontWeight: 700 }}>Calculation Preview: </span>
                     {useTurningPoint && deltaL && !isNaN(parseFloat(deltaL))
                       ? `E = ${indicatedValue} + ${(0.5 * config.verification_interval).toFixed(4)} − ${deltaL} − ${currentLoad} = ${(parseFloat(indicatedValue) + 0.5 * config.verification_interval - parseFloat(deltaL) - currentLoad!).toFixed(4)} ${config.unit}`
                       : `E = I − L = ${indicatedValue} − ${currentLoad} = ${(parseFloat(indicatedValue) - currentLoad!).toFixed(4)} ${config.unit}`
@@ -593,7 +593,7 @@ export default function TestExecutionPage() {
           {/* Completion */}
           {showComplete && (
             <div className="card animate-in" style={{ marginBottom: 16 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--pure-white)' }}>Test Completed</h3>
+              <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>Test Completed</h3>
               {(() => {
                 const freshSess = store.testSessions.find(s => s.id === sessionId);
                 const lastAttempt = freshSess?.attempts[freshSess.attempts.length - 1];

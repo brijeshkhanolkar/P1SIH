@@ -27,16 +27,16 @@ export default function SettingsPage() {
         <div className="card">
           <div className="card-header">
             <div className="card-title">Active Persona</div>
-            <User size={14} color="var(--steel)" />
+            <User size={16} color="var(--purple)" />
           </div>
-          <div className="report-info-grid" style={{ color: 'var(--off-white)', fontSize: 12, marginBottom: 16 }}>
+          <div className="report-info-grid" style={{ color: 'var(--text-primary)', fontSize: 12, marginBottom: 16 }}>
             <span className="instrument-meta-label">Name</span><span>{currentUser?.full_name}</span>
             <span className="instrument-meta-label">Email</span><span>{currentUser?.email}</span>
-            <span className="instrument-meta-label">Current Role</span><span style={{ textTransform: 'capitalize' }}>{currentUser?.role}</span>
+            <span className="instrument-meta-label">Current Role</span><span style={{ textTransform: 'capitalize', fontWeight: 600, color: 'var(--purple)' }}>{currentUser?.role}</span>
             <span className="instrument-meta-label">Member Since</span><span>{currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString() : '—'}</span>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--steel-light)', marginBottom: 6 }}>Switch Active Role:</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6, fontWeight: 600 }}>Switch Active Role:</div>
             <div style={{ display: 'flex', gap: 6 }}>
               {(['operator', 'reviewer', 'auditor', 'admin'] as UserRole[]).map(role => (
                 <button
@@ -56,9 +56,9 @@ export default function SettingsPage() {
         <div className="card">
           <div className="card-header">
             <div className="card-title">Testing Organization</div>
-            <Building size={14} color="var(--steel)" />
+            <Building size={16} color="var(--purple)" />
           </div>
-          <div className="report-info-grid" style={{ color: 'var(--off-white)', fontSize: 12 }}>
+          <div className="report-info-grid" style={{ color: 'var(--text-primary)', fontSize: 12 }}>
             <span className="instrument-meta-label">Organization</span><span>National Metrology Laboratory</span>
             <span className="instrument-meta-label">Category</span><span>Statutory Legal Metrology Facility</span>
             <span className="instrument-meta-label">Jurisdiction</span><span>India</span>
@@ -71,12 +71,12 @@ export default function SettingsPage() {
         <div className="card">
           <div className="card-header">
             <div className="card-title">Metrological Rule Base</div>
-            <BookOpen size={14} color="var(--steel)" />
+            <BookOpen size={16} color="var(--purple)" />
           </div>
-          <div className="report-info-grid" style={{ color: 'var(--off-white)', fontSize: 12 }}>
+          <div className="report-info-grid" style={{ color: 'var(--text-primary)', fontSize: 12 }}>
             <span className="instrument-meta-label">Standard Set</span><span>{activeRuleVersion.name}</span>
             <span className="instrument-meta-label">Version</span><span>{activeRuleVersion.version}</span>
-            <span className="instrument-meta-label">Status</span><span style={{ color: 'var(--green)' }}>Active Statutory Rule</span>
+            <span className="instrument-meta-label">Status</span><span style={{ color: 'var(--pass-green-light)', fontWeight: 600 }}>Active Statutory Rule</span>
             <span className="instrument-meta-label">Required Tests</span><span>{activeRuleVersion.test_procedures.length} procedures</span>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function SettingsPage() {
         <div className="card">
           <div className="card-header">
             <div className="card-title">Certificate & Report Templates</div>
-            <FileText size={14} color="var(--steel)" />
+            <FileText size={16} color="var(--purple)" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {[
@@ -93,10 +93,10 @@ export default function SettingsPage() {
               { name: 'Detailed Calibration & Metrological Test Report', code: 'OIML-R76-DET' },
               { name: 'Subsequent Verification & Retest Certificate', code: 'OIML-R76-RET' },
             ].map((t, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: i < 2 ? '1px solid var(--border)' : 'none' }}>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: i < 2 ? '1px solid var(--slate-border)' : 'none' }}>
                 <div>
-                  <div style={{ fontSize: 12, color: 'var(--off-white)' }}>{t.name}</div>
-                  <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--steel)' }}>{t.code}</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>{t.name}</div>
+                  <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{t.code}</div>
                 </div>
                 <span className="status-badge pass">Approved</span>
               </div>

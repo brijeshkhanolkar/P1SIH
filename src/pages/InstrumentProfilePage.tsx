@@ -105,36 +105,36 @@ export default function InstrumentProfilePage() {
       </button>
 
       {/* LARGE INSTRUMENT IDENTIFICATION & TECHNICAL BLUEPRINT HERO */}
-      <div className="tech-panel" style={{ marginBottom: '2rem', overflow: 'hidden' }}>
+      <div className="tech-panel" style={{ marginBottom: '2rem', overflow: 'hidden', background: '#ffffff', border: '1px solid var(--slate-border)', boxShadow: 'var(--shadow-panel)' }}>
         {/* Header Ribbon */}
         <div style={{
           padding: '1.75rem 2rem',
-          borderBottom: '1px solid var(--slate-border)',
+          borderBottom: '1px solid var(--purple-border)',
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1.5rem',
-          background: 'linear-gradient(135deg, rgba(18, 24, 33, 0.95), rgba(13, 17, 23, 0.98))',
+          background: 'linear-gradient(135deg, #ffffff 0%, #faf5ff 100%)',
         }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <span className="badge-class-i" style={{ background: 'var(--amber-dim)', color: 'var(--amber-light)', borderColor: 'var(--amber-border)' }}>
+              <span className="badge-class-i" style={{ background: 'var(--purple-dim)', color: 'var(--purple)', borderColor: 'var(--purple-border)', fontWeight: 700 }}>
                 {instrument.instrument_type.toUpperCase()}
               </span>
               <span style={{
                 fontFamily: 'var(--font-mono)', fontSize: '0.7rem', fontWeight: 700,
-                color: instrument.status === 'under_test' ? 'var(--amber-light)' : 'var(--pass-green-light)',
+                color: instrument.status === 'under_test' ? 'var(--purple)' : 'var(--pass-green-light)',
                 display: 'flex', alignItems: 'center', gap: 5
               }}>
-                <span className="pulse-radar-dot" style={{ width: 6, height: 6 }} />
+                <span className="pulse-radar-dot" style={{ width: 6, height: 6, background: instrument.status === 'under_test' ? 'var(--purple)' : 'var(--pass-green)' }} />
                 {instrument.status?.replace('_', ' ').toUpperCase()}
               </span>
             </div>
 
             <h1 style={{
-              fontFamily: 'var(--font-mono)', fontSize: '2.4rem', fontWeight: 800,
-              letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.1
+              fontFamily: 'var(--font-mono)', fontSize: '2.2rem', fontWeight: 800,
+              letterSpacing: '-0.02em', color: 'var(--text-primary)', lineHeight: 1.1
             }}>
               {instrument.serial_number || instrument.instrument_id}
             </h1>
@@ -165,12 +165,13 @@ export default function InstrumentProfilePage() {
 
         {/* CLEAN ENGINEERING-STYLE SVG TECHNICAL ILLUSTRATION WITH MEASUREMENT CALLOUTS */}
         <div style={{
-          padding: '2.5rem 2rem',
-          background: 'rgba(8, 10, 15, 0.65)',
+          padding: '2rem',
+          background: '#ffffff',
           display: 'grid',
           gridTemplateColumns: '1.4fr 1fr',
           gap: '2.5rem',
           alignItems: 'center',
+          borderBottom: '1px solid var(--slate-border)',
         }}>
           {/* Engineering Blueprint Drawing */}
           <div style={{ position: 'relative' }}>
@@ -178,48 +179,48 @@ export default function InstrumentProfilePage() {
               display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)',
               fontSize: '0.68rem', color: 'var(--text-dim)', marginBottom: '0.75rem'
             }}>
-              <span>SCHEMATIC ELEVATION: PRECISION NON-AUTOMATIC WEIGHING SYSTEM</span>
-              <span style={{ color: 'var(--amber)' }}>SCALE RATIO 1:1 CALIBRATED</span>
+              <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>SCHEMATIC ELEVATION: PRECISION NON-AUTOMATIC WEIGHING SYSTEM</span>
+              <span style={{ color: 'var(--purple)', fontWeight: 600 }}>SCALE RATIO 1:1 CALIBRATED</span>
             </div>
 
             <svg width="100%" height="220" viewBox="0 0 540 220" fill="none" xmlns="http://www.w3.org/2000/svg">
               {/* Level surface datum */}
-              <line x1="20" y1="195" x2="520" y2="195" stroke="#1f2937" strokeWidth="2" strokeDasharray="4 4" />
-              <text x="25" y="210" fill="#4b5563" fontFamily="var(--font-mono)" fontSize="9">GROUND DATUM PLANE (g=9.792 m/s²)</text>
+              <line x1="20" y1="195" x2="520" y2="195" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4" />
+              <text x="25" y="210" fill="#94a3b8" fontFamily="var(--font-mono)" fontSize="9">GROUND DATUM PLANE (g=9.792 m/s²)</text>
 
               {/* Adjustable Leveling Feet */}
-              <circle cx="80" cy="188" r="8" fill="#1f2937" stroke="#374151" strokeWidth="1.5" />
-              <circle cx="460" cy="188" r="8" fill="#1f2937" stroke="#374151" strokeWidth="1.5" />
-              <line x1="80" y1="180" x2="80" y2="160" stroke="#f59e0b" strokeWidth="2" />
-              <line x1="460" y1="180" x2="460" y2="160" stroke="#f59e0b" strokeWidth="2" />
+              <circle cx="80" cy="188" r="8" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.5" />
+              <circle cx="460" cy="188" r="8" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.5" />
+              <line x1="80" y1="180" x2="80" y2="160" stroke="#7c3aed" strokeWidth="2" />
+              <line x1="460" y1="180" x2="460" y2="160" stroke="#7c3aed" strokeWidth="2" />
 
               {/* Base Chassis Housing */}
-              <rect x="60" y="130" width="420" height="30" rx="3" fill="#111822" stroke="#2d3b4e" strokeWidth="1.5" />
+              <rect x="60" y="130" width="420" height="30" rx="3" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
               
               {/* Digital Indicator Console Display */}
-              <rect x="360" y="135" width="105" height="20" rx="2" fill="#080c12" stroke="#f59e0b" strokeWidth="1" />
-              <text x="375" y="149" fill="#10b981" fontFamily="var(--font-mono)" fontSize="11" fontWeight="bold">0.0000 g</text>
-              <circle cx="450" cy="145" r="2.5" fill="#f59e0b" />
+              <rect x="360" y="135" width="105" height="20" rx="2" fill="#faf5ff" stroke="#7c3aed" strokeWidth="1" />
+              <text x="375" y="149" fill="#7c3aed" fontFamily="var(--font-mono)" fontSize="11" fontWeight="bold">0.0000 g</text>
+              <circle cx="450" cy="145" r="2.5" fill="#7c3aed" />
 
               {/* Spirit Level Bubble */}
-              <circle cx="100" cy="145" r="7" fill="#080c12" stroke="#64748b" strokeWidth="1" />
+              <circle cx="100" cy="145" r="7" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1" />
               <circle cx="100" cy="145" r="2" fill="#10b981" />
 
               {/* Strain-Gauge Load Cell Sensor Column */}
-              <rect x="235" y="65" width="70" height="65" rx="3" fill="#16202c" stroke="#3b82f6" strokeWidth="1.5" />
-              <circle cx="270" cy="98" r="9" fill="#f59e0b" fillOpacity="0.15" stroke="#f59e0b" strokeWidth="1.5" />
-              <path d="M 255 98 L 285 98 M 270 83 L 270 113" stroke="#f59e0b" strokeWidth="1" strokeDasharray="2 2" />
+              <rect x="235" y="65" width="70" height="65" rx="3" fill="#f1f5f9" stroke="#8b5cf6" strokeWidth="1.5" />
+              <circle cx="270" cy="98" r="9" fill="#f5f3ff" stroke="#7c3aed" strokeWidth="1.5" />
+              <path d="M 255 98 L 285 98 M 270 83 L 270 113" stroke="#7c3aed" strokeWidth="1" strokeDasharray="2 2" />
 
               {/* Stainless Steel Weighing Pan (Receptor) */}
-              <rect x="110" y="55" width="320" height="10" rx="2" fill="#1f2937" stroke="#f59e0b" strokeWidth="1.5" />
-              <line x1="110" y1="65" x2="235" y2="90" stroke="#374151" strokeDasharray="3 3" />
-              <line x1="430" y1="65" x2="305" y2="90" stroke="#374151" strokeDasharray="3 3" />
+              <rect x="110" y="55" width="320" height="10" rx="2" fill="#ede9fe" stroke="#7c3aed" strokeWidth="1.5" />
+              <line x1="110" y1="65" x2="235" y2="90" stroke="#cbd5e1" strokeDasharray="3 3" />
+              <line x1="430" y1="65" x2="305" y2="90" stroke="#cbd5e1" strokeDasharray="3 3" />
 
               {/* Dynamic Callout Arrows */}
-              <circle cx="270" cy="55" r="4" fill="#f59e0b" />
-              <line x1="270" y1="55" x2="270" y2="25" stroke="#f59e0b" strokeWidth="1" />
-              <rect x="220" y="10" width="100" height="18" rx="2" fill="#080a0f" stroke="#f59e0b" strokeWidth="1" />
-              <text x="230" y="23" fill="#f59e0b" fontFamily="var(--font-mono)" fontSize="10" fontWeight="bold">LOAD RECEPTOR</text>
+              <circle cx="270" cy="55" r="4" fill="#7c3aed" />
+              <line x1="270" y1="55" x2="270" y2="25" stroke="#7c3aed" strokeWidth="1" />
+              <rect x="220" y="10" width="100" height="18" rx="2" fill="#faf5ff" stroke="#7c3aed" strokeWidth="1" />
+              <text x="230" y="23" fill="#7c3aed" fontFamily="var(--font-mono)" fontSize="10" fontWeight="bold">LOAD RECEPTOR</text>
             </svg>
           </div>
 
@@ -276,22 +277,34 @@ export default function InstrumentProfilePage() {
         </div>
       </div>
 
-      {/* ENGINEERING SUBTABS */}
+      {/* CLEAN WHITE & PURPLE NAVIGATION TABS */}
       <div className="tabs-container">
-        {(['overview', 'config', 'plan', 'history', 'evidence', 'reports', 'audit'] as const).map(tab => (
-          <button
-            key={tab}
-            className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab === 'config' ? '02 CONFIGURATION' :
-             tab === 'plan' ? '03 TEST PLAN' :
-             tab === 'history' ? '04 TEST HISTORY' :
-             tab === 'evidence' ? '05 EVIDENCE' :
-             tab === 'reports' ? '06 REPORTS' :
-             tab === 'audit' ? '07 AUDIT TRAIL' : '01 OVERVIEW'}
-          </button>
-        ))}
+        {[
+          { id: 'overview', label: 'Overview', icon: Eye },
+          { id: 'config', label: 'Configuration', icon: Settings },
+          { id: 'plan', label: 'Test Plan', icon: Layers, count: testPlan?.tests?.length },
+          { id: 'history', label: 'Test History', icon: RotateCcw, count: sessions.length },
+          { id: 'evidence', label: 'Evidence', icon: Upload, count: evidence.length },
+          { id: 'reports', label: 'Reports', icon: FileText, count: reports.length },
+          { id: 'audit', label: 'Audit Trail', icon: Shield, count: auditLogs.length },
+        ].map(t => {
+          const Icon = t.icon;
+          const isActive = activeTab === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              className={`tab-btn ${isActive ? 'active' : ''}`}
+              onClick={() => setActiveTab(t.id as any)}
+            >
+              <Icon size={14} className="tab-icon" />
+              <span>{t.label}</span>
+              {t.count !== undefined && t.count > 0 && (
+                <span className="tab-badge">{t.count}</span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* TAB CONTENT: OVERVIEW */}

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useAppStore } from '../lib/store';
-import { ScrollText, Search, Download } from 'lucide-react';
+import { ScrollText, Search, Download, ShieldCheck, User } from 'lucide-react';
 
 export default function AuditPage() {
   const { auditLogs } = useAppStore();
@@ -42,65 +42,98 @@ export default function AuditPage() {
   };
 
   return (
-    <div>
-      <div className="page-header">
-        <div className="page-header-row">
-          <div>
-            <h2>Audit Trail</h2>
-            <p>Tamper-evident record of all metrological events, test results, and laboratory approvals.</p>
+    <div className="animate-entrance" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div className="page-hero">
+        <div>
+          <div className="text-tech-amber" style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <ScrollText size={14} /> 21 CFR PART 11 COMPLIANT LOG
           </div>
-          <button className="btn btn-secondary" onClick={handleExportCSV}>
-            <Download size={14} /> Export CSV
-          </button>
+          <h1 className="page-hero-title">
+            Metrological Audit Trail
+          </h1>
+          <p className="page-hero-subtitle">
+            Tamper-evident, chronological log of all measurements, adjustments, operator inputs, and reviewer digital sign-offs.
+          </p>
         </div>
+
+        <button className="btn-precision-ghost" onClick={handleExportCSV} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Download size={14} /> EXPORT AUDIT CSV
+        </button>
       </div>
 
-      <div className="filter-bar">
-        <div className="filter-search" style={{ width: 280 }}>
-          <Search size={14} />
+      <div className="filter-shelf">
+        <div className="search-box-precision">
+          <Search size={15} color="var(--text-muted)" />
           <input
             type="text"
-            className="form-input"
-            placeholder="Search audit events, users, actions…"
+            placeholder="Search audit trail by action, operator, or details…"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-        <select className="form-select" value={userFilter} onChange={e => setUserFilter(e.target.value)}>
-          <option value="">All Users</option>
-          {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
-        </select>
-        <select className="form-select" value={entityFilter} onChange={e => setEntityFilter(e.target.value)}>
-          <option value="">All Entities</option>
-          {uniqueEntities.map(e => <option key={e} value={e}>{e}</option>)}
-        </select>
+
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <select className="form-select" value={userFilter} onChange={e => setUserFilter(e.target.value)} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>
+            <option value="">ALL OPERATORS</option>
+            {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
+          </select>
+          <select className="form-select" value={entityFilter} onChange={e => setEntityFilter(e.target.value)} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>
+            <option value="">ALL ENTITY TYPES</option>
+            {uniqueEntities.map(e => <option key={e} value={e}>{e.toUpperCase()}</option>)}
+          </select>
+        </div>
       </div>
 
-      <div className="card">
+      <div className="tech-table-container">
         {filtered.length === 0 ? (
-          <div className="empty-state">
-            <ScrollText />
-            <h3>No audit events found</h3>
-            <p>Adjust your filters or perform actions to generate audit records.</p>
+          <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <ScrollText size={36} style={{ margin: '0 auto 1rem', opacity: 0.3 }} />
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9rem' }}>NO AUDIT EVENTS FOUND</div>
           </div>
         ) : (
-          <div className="audit-timeline">
-            {filtered.slice(0, 100).map(log => (
-              <div key={log.id} className={`audit-entry ${log.user_id === 'system' ? 'system' : 'user'}`}>
-                <div className="audit-timestamp">
-                  {new Date(log.timestamp).toLocaleString()}
-                  <span style={{ marginLeft: 8, fontSize: 9, padding: '1px 5px', background: 'var(--charcoal)', borderRadius: 2, color: 'var(--steel-light)' }}>
+          <table className="tech-table">
+            <thead>
+              <tr>
+                <th>TIMESTAMP</th>
+                <th>OPERATOR / USER</th>
+                <th>ROLE</th>
+                <th>ENTITY</th>
+                <th>ACTION</th>
+                <th>AUDIT DETAILS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.slice(0, 50).map(log => (
+                <tr key={log.id}>
+                  <td style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                    {new Date(log.timestamp).toLocaleString()}
+                  </td>
+                  <td>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.8rem' }}>
+                      {log.user_name}
+                    </div>
+                  </td>
+                  <td>
+                    <span style={{
+                      fontFamily: 'var(--font-mono)', fontSize: '0.65rem', textTransform: 'uppercase',
+                      color: 'var(--amber)', background: 'var(--amber-dim)', padding: '1px 6px', borderRadius: 3
+                    }}>
+                      {log.user_role}
+                    </span>
+                  </td>
+                  <td style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
                     {log.entity_type}
-                  </span>
-                </div>
-                <div className="audit-actor">
-                  {log.user_name}
-                  <span style={{ fontSize: 10, color: 'var(--steel)', marginLeft: 6 }}>({log.user_role})</span>
-                </div>
-                <div className="audit-action">{log.details}</div>
-              </div>
-            ))}
-          </div>
+                  </td>
+                  <td style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-primary)' }}>
+                    {log.action}
+                  </td>
+                  <td style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: 380 }}>
+                    {log.details}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

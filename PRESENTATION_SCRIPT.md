@@ -1,220 +1,181 @@
-# 🎙️ METROLOGY Presentation Script & Live Demo Guide
+# 🎙️ METROLOGY — 3-Minute Presentation & Live Demo Script
 
-> **Project:** METROLOGY — NAWI Testing & Verification Platform  
-> **Event:** Smart India Hackathon (SIH 2026)  
+> **Event:** Smart India Hackathon (SIH)  
 > **Problem Statement ID:** SIH26035  
-> **Format:** 7–10 Minute Pitch + Live Product Demonstration + Jury Q&A  
-> **Target Audience:** Hackathon Evaluators, Legal Metrology Officers, Technical Judges
+> **Problem Title:** Software Program / Application for Generation of Test Reports for Non-Automatic Weighing Instruments (NAWI) as per OIML Recommendation R-76  
+> **Pitch Format:** 3-Minute Strict Time Limit (180 Seconds) + Live Prototype Demo + Jury Q&A  
+> **Visual Aesthetic:** Modern SaaS White & Royal Purple Theme (`#7c3aed`)  
+> **Target Audience:** Hackathon Evaluators, Legal Metrology Officers, Technical Judges  
 
 ---
 
-## ⏱️ Recommended Presentation Timing Breakdown
+## ⏱️ 3-Minute Master Timeline (The 180-Second Clock)
 
-| Segment | Duration | Focus Area |
-| :--- | :---: | :--- |
-| **Part 1: The Hook & Problem Statement** | 1.5 mins | The cost of weighing inaccuracies & the manual verification nightmare. |
-| **Part 2: The Solution & Metrology Foundation** | 2.0 mins | Introducing METROLOGY and the OIML R-76 calculation engine. |
-| **Part 3: Live System Demonstration** | 3.5 mins | Step-by-step walkthrough of the live application. |
-| **Part 4: Impact, Security & Architecture** | 1.5 mins | Cryptographic sign-offs, 21 CFR Part 11 audit trail, and scalability. |
-| **Part 5: Conclusion & Q&A Defense** | 1.5 mins | Summary & prepared answers for tough jury questions. |
-
----
-
-## 🎬 Part 1: The Hook & Problem Statement (00:00 - 01:30)
-
-### 💬 What to Say:
-> *"Respected judges and members of the panel, good morning/afternoon.*
->
-> *Every single day, trillions of dollars of global trade, life-saving pharmaceutical dosages, and consumer grocery transactions rely on one single assumption: **that the weighing scale is telling the truth**.*
->
-> *Whether it is a microgram balance in an oncology lab or a 100-tonne weighbridge at a national port, accuracy is not a luxury—it is law. Under the International Organization of Legal Metrology, specifically **OIML Recommendation R-76**, every Non-Automatic Weighing Instrument (NAWI) must be rigorously tested and certified.*
->
-> *Yet today, in hundreds of testing labs and government verification departments, how is this done? **On paper clipboards and fragile spreadsheets.** Officers manually calculate complex fractional turning points, look up statutory error limits across four accuracy classes, and spend hours typing up certificates.*
->
-> *The consequences? Human calculation errors, delayed trade clearances, zero tamper-proofing, and no audit trail.*
->
-> *To solve SIH Problem Statement **SIH26035**, we built **METROLOGY**: an intelligent, zero-error digital laboratory workstation that automates the entire OIML R-76 testing, verification, and report generation pipeline."*
-
-### 🖥️ Slide / Visual:
-* **Slide 1: Title Slide** showing Project Logo, SIH Problem ID **SIH26035**, and OIML R-76 reference.
-* **Slide 2: Problem Illustration** showing manual paper clipboards, mathematical calculation bottlenecks, and the risk of fraudulent test reports.
+| Time | Duration | Screen / URL | Core Focus & Action |
+| :--- | :---: | :--- | :--- |
+| **00:00 - 00:30** | 30s | **Slide 1 / Dashboard (`/`)** | **The Hook & Problem:** Trillions in trade rely on weighing scales. Manual paper clipboards & spreadsheets cause errors, delays, and fraud. Introduce METROLOGY. |
+| **00:30 - 01:00** | 30s | **Screen 1: Dashboard (`/`)** | **Operations at a Glance:** Clean White & Purple UI, 4 essential metrology metrics (Pass rate within MPE, Scales in Lab, Active tests), 1-click Quick Test. |
+| **01:00 - 01:30** | 30s | **Screen 2: Scale Profile (`/instruments/inst-001`)** | **Metrology Intelligence:** Interactive elevation blueprint, automatic statutory classification ($n = \text{Max}/e$, Class I–IV), and clean segmented tabs. |
+| **01:30 - 02:15** | 45s | **Screen 3: Testing Workstation (`/testing/session-01`)** | **⭐ The Star Feature:** Live Turning Point formula ($E = I + \frac{1}{2}e - \Delta L - L$), real-time MPE tolerance visualization band, and 1-click `⚡ Nominal` vs `⚠️ Fail` test triggers. |
+| **02:15 - 02:45** | 30s | **Screen 4: Certificate & PDF (`/reports/rep-001`)** | **Statutory Compliance:** Official OIML R 76-2 certificate compiled in 30 seconds, cryptographic SHA-256 digital signature, and 1-click vector PDF export. |
+| **02:45 - 03:00** | 15s | **Screen 5: Audit Trail (`/audit`) & Wrap-up** | **Impact & Close:** 21 CFR Part 11 immutable audit trail, zero math errors, WebSerial/RS-232 hardware readiness. Punchy closing! |
 
 ---
 
-## 🔬 Part 2: The Solution & Metrology Mathematics (01:30 - 03:30)
+## 🖥️ Screen-by-Screen Demo Walkthrough & Spoken Script
 
-### 💬 What to Say:
-> *"Before we show you the software in action, let's look at the metrological core that sets our platform apart.*
->
-> *OIML R-76 is not just a form; it is a rigorous mathematical standard. Our platform embeds a specialized **Metrology Rule Engine** that enforces four core statutory mechanisms:*
->
-> 1. *First, **Classification and Scale Intervals:** We automatically calculate $n = \text{Max} / e$. If an instrument has $15,000$ divisions, the engine immediately identifies it as a Class III instrument and binds its minimum capacity to $20\,e$.*
->
-> 2. *Second, **The Turning Point Formula:** Digital scales round their display. To find the exact unrounded error, standard §A.4.4.3 requires adding fractional weights $\Delta L$ until the display switches. Our engine solves the exact statutory equation:*
->    $$E = I + \frac{1}{2}e - \Delta L - L$$
->    *and eliminates tare offset with corrected error $E_c = E - E_0$.*
->
-> 3. *Third, **Dynamic MPE Thresholds:** The engine dynamically checks load values against allowable Maximum Permissible Errors: $\pm 0.5\,e$, $\pm 1.0\,e$, and $\pm 1.5\,e$ at critical transition points like $500\,e$ and $2000\,e$.*
->
-> 4. *And fourth, **Automated Multi-Phase Test Procedures:** Weighing performance across ascending and descending loads, eccentricity at the four quadrants, repeatability, and discrimination.*
->
-> *Let us now jump into the live platform."*
+### 📍 SCREEN 0 & 1: Hook & Operational Dashboard (00:00 – 00:30)
+* **URL:** `http://localhost:5173/`
+* **What to Show on Screen:**
+  - Modern White & Royal Purple dashboard.
+  - The 4 core KPI cards: **Scales in Lab (5)**, **Tests Executed (7)**, **Pass Rate within MPE (83.3%)**, and **Verified Certificates (1)**.
+  - Prominent Active Test alert banner with purple `Resume Test` button.
 
-### 🖥️ Slide / Visual:
-* **Slide 3:** Diagram of OIML R-76 formula: $E = I + 0.5e - \Delta L - L$ and the dynamic MPE step-function curve ($\pm 0.5e \to \pm 1.0e \to \pm 1.5e$).
-
----
-
-## 💻 Part 3: Live System Demonstration (03:30 - 07:00)
-
-*(Switch screen to the running web application in the browser at `http://localhost:5173` or your live Vercel URL)*
-
-### 📍 Scene 1: Industrial Dashboard & Role Switcher
-* **Action:** Show the main dashboard (`/`).
-* **What to Say:**
-  > *"This is the METROLOGY operational dashboard. Notice the dark-theme metrology industrial aesthetic, designed for calibration labs. At a glance, the laboratory director sees live verification statistics, active test sessions, compliance percentages, and pending reviews.*
+* **💬 Exactly What to Say (Word-for-Word):**
+  > *"Respected judges, every day trillions of dollars of commerce, legal trade, and life-saving pharmaceutical dosages rely on one fundamental assumption: **that the weighing scale is telling the truth**.*
   >
-  > *We also support four distinct roles: **Operator**, **Reviewer**, **Auditor**, and **Administrator**, each with strict separation of duties."*
-
----
-
-### 📍 Scene 2: Quick Command Palette
-* **Action:** Press `Ctrl + K` (or `Cmd + K`) to trigger the Command Palette.
-* **What to Say:**
-  > *"Inspectors on the floor can use keyboard shortcuts like `Ctrl + K` to jump instantly between instruments, reports, or test procedures without touching a mouse."*
-
----
-
-### 📍 Scene 3: Instrument Registry & Auto-Validation
-* **Action:** Navigate to **Instruments** (`/instruments`). Click on instrument `W-2026-001` or click **"Register Instrument"**.
-* **What to Say:**
-  > *"When an instrument arrives at the facility, it is registered with its technical specifications: manufacturer, model, serial number, accuracy class, Max capacity, and verification interval $e$.*
+  > *Under international law—specifically **OIML Recommendation R-76**—every weighing instrument must be rigorously verified against statutory error limits. Yet today, officers in legal metrology departments still calculate errors manually on paper clipboards and spreadsheets. This leads to human mathematical errors, delayed trade clearances, zero tamper-proofing, and takes over 3 hours per certificate.*
   >
-  > *Notice that as we specify Max and $e$, our system automatically calculates the number of verification scale intervals $n = \text{Max} / e$, validates whether it satisfies Class I, II, III, or IIII requirements, and locks in the statutory minimum capacity."*
+  > *To solve SIH Problem **SIH26035**, we built **METROLOGY**: a hassle-free, automated digital workstation that turns days of manual testing into a 30-second, zero-error statutory workflow."*
 
 ---
 
-### 📍 Scene 4: Deterministic Test Plan Generation
-* **Action:** Navigate to **Test Plans** (`/test-plans`) and click on an active plan.
-* **What to Say:**
-  > *"Rather than relying on the operator to guess which test weights to load, METROLOGY automatically synthesizes a deterministic test sequence adhering to OIML R-76. It generates exact load points: Zero, Min, the critical transition points ($500e, 2000e$), $50\% \text{Max}$, and $100\% \text{Max}$, for both ascending and descending runs."*
+### 📍 SCREEN 2: Scale Registry & Technical Blueprint (00:30 – 01:00)
+* **URL:** `http://localhost:5173/instruments/inst-001` (or click *Weighing Scales* $\to$ *Mettler Toledo*)
+* **What to Show on Screen:**
+  - The clean technical elevation schematic (pan, load cell column, leveling bubble, digital display).
+  - The 4 metric tiles: **Max Capacity (10,000 g)**, **Interval e (5 g)**, **Accuracy Class (CLASS III)**, **Resolution n (2,000 intervals)**.
+  - The newly styled White & Purple segmented tabs: `Overview`, `Configuration`, `Test Plan (3)`, `Test History (3)`, `Evidence`, `Reports (1)`, `Audit Trail (8)`.
+
+* **💬 Exactly What to Say (Word-for-Word):**
+  > *"Here in the Instrument Registry, when a scale arrives at the lab, our platform eliminates operator guesswork. 
+  > 
+  > By inputting just Capacity and Scale Interval $e$, our engine automatically computes the statutory resolution $n = \text{Max} / e$, classifies the scale into Class I through Class IIII per OIML Table 3, and generates a deterministic multi-point test plan for weighing, eccentricity, and repeatability.
+  > 
+  > Notice the clean White and Purple interface—all parameters, documents, and past test records are accessible in a single, cluster-free view."*
 
 ---
 
-### 📍 Scene 5: The Active Testing Workstation (The Star Feature)
-* **Action:** Navigate to **Active Testing Workstation** (`/testing/session-01` or any active test).
-* **What to Say:**
-  > *"Here is where the magic happens: the Active Testing Workstation.*
+### 📍 SCREEN 3: The Star Feature — Active Testing Workstation (01:00 – 01:45)
+* **URL:** `http://localhost:5173/testing/session-01` (or click `▶ Start Test` in topbar / `Resume Test` on dashboard)
+* **What to Show on Screen:**
+  - Metrological instruction card with purple accent.
+  - Reference test load indicator ($10,000\text{ g}$).
+  - Click the **`⚡ Nominal`** button to demonstrate instant automated compliant calculation.
+  - Show the live **Calculation Preview** formula ($E = I - L$).
+  - Toggle **Turning Point Method** checkbox to show changeover weights ($E = I + \frac{1}{2}e - \Delta L - L$).
+  - Point to the **MPE Error Band Visualization**: green marker comfortably inside the $\pm \text{MPE}$ safety band!
+  - Click **`⚠️ Fail Test`** briefly to show the red boundary violation detection.
+
+* **💬 Exactly What to Say (Word-for-Word):**
+  > *"This is our core innovation: the **Active Testing Workstation**.*
   >
-  > *Look at this row: the operator places a $10.00\,\text{kg}$ reference load. The scale indicates $10.002\,\text{kg}$.*
-  > *If using a turning point test, the operator clicks **'Turning Point Calculator'**, enters the added fractional load $\Delta L$, and the system calculates true error in real time.*
+  > *During execution, scales only show rounded digital steps. Per R-76 Section A.4.4.3, our platform implements the statutory **Turning Point Formula**:*
+  > $$E = I + \frac{1}{2}e - \Delta L - L$$
+  > *Watch this: when the operator records an indication, our engine evaluates the error in real-time. Look at this visual MPE band—it compares true error directly against dynamic legal thresholds ($\pm 0.5e, \pm 1.0e, \pm 1.5e$).*
+  > 
+  > *With our 1-click simulation tools, we can verify nominal compliance *(click ⚡ Nominal)* or immediately catch an out-of-tolerance defect *(click ⚠️ Fail Test)* with zero human calculation delay."*
+
+---
+
+### 📍 SCREEN 4: Official OIML R 76-2 Certificate & Instant PDF (01:45 – 02:15)
+* **URL:** `http://localhost:5173/reports/rep-001` (or click *Certificates* $\to$ *View Report*)
+* **What to Show on Screen:**
+  - Official OIML Test Report preview with green verified stamp.
+  - Formatted measurement tables (Weighing, Eccentricity, Repeatability).
+  - Digital verification box with **Cryptographic SHA-256 Digital Signature**.
+  - Click **`Generate Official PDF`** (watch the vector PDF download instantly!).
+
+* **💬 Exactly What to Say (Word-for-Word):**
+  > *"Once tests conclude, METROLOGY instantly compiles an official **OIML R 76-2 Test Certificate**.*
   >
-  > *Watch the visual MPE tolerance bar: our algorithm compares the true error against the statutory limit of $\pm 0.005\,\text{kg}$. If the measurement is within tolerance, it displays a crisp green PASS with safety margins. If it exceeds the boundary, it instantly flags a FAIL and logs a deviation."*
-
----
-
-### 📍 Scene 6: Generating the Official OIML R 76-2 Test Certificate
-* **Action:** Navigate to **Reports** (`/reports`) and open report `REP-2026-001`.
-* **What to Say:**
-  > *"Once tests are completed, the platform instantly compiles an official **OIML R 76-2 Test Certificate**.*
+  > *What used to take hours of manual transcription and formatting is finished in 30 seconds. Every measurement table—ascending, descending, corner load eccentricity, and repeatability variance—is compiled into legal format.*
   >
-  > *No more manual copying! Every measurement table—weighing performance ascending and descending, eccentricity readings, repeatability spread, temperature, and tare tests—is rendered cleanly.*
+  > *Crucially for legal validity, each certificate is stamped with an immutable **cryptographic SHA-256 hash** and reviewer authorization seal. With one click on **Generate Official PDF**, the officer receives an accredited, vector-crisp legal certificate ready for trade and court compliance."*
+
+---
+
+### 📍 SCREEN 5: Immutable Audit Trail & Grand Finale (02:15 – 02:45)
+* **URL:** `http://localhost:5173/audit` (or click *Audit Trail* in sidebar)
+* **What to Show on Screen:**
+  - Chronological, tamper-evident log entries with timestamps, user identities, roles, and cryptographic hashes.
+  - Role switcher in topbar showing **Operator $\to$ Reviewer $\to$ Auditor $\to$ Admin** segregation of duties.
+
+* **💬 Exactly What to Say (Word-for-Word):**
+  > *"Finally, for ISO/IEC 17025 laboratory accreditation and fraud prevention, we built a 21 CFR Part 11 compliant **Immutable Audit Trail**.*
   >
-  > *Notice the bottom of the certificate: it features a **cryptographic SHA-256 digital signature hash** and reviewer approval stamp, ensuring no test data can ever be forged or modified post-certification.*
+  > *Every weight applied, tolerance calculated, and report signed is cryptographically stamped with the user's role and exact timestamp. Neither operators nor administrators can alter historical calibration records without detection."*
+
+---
+
+### 🎯 The 15-Second Grand Finale & Pitch Close (02:45 – 03:00)
+* **What to Show on Screen:** Back to Dashboard (`/`) with clean stats in view.
+* **💬 Final Words (Deliver with energy & confidence!):**
+  > *"In conclusion, METROLOGY delivers:*
+  > 1. *100% mathematical precision under OIML Recommendation R-76,*
+  > 2. *Reduction of test cycle time from 3 hours down to 30 seconds,*
+  > 3. *Zero human calculation errors,*
+  > 4. *And hardware readiness for direct RS-232 / USB scale streaming via WebSerial.*
   >
-  > *With one click on **'Export Official PDF'**, the browser generates a high-resolution, vector-accurate PDF certificate ready for legal submission."*
+  > *Thank you, judges! We are eager to take your questions."*
 
 ---
 
-### 📍 Scene 7: 21 CFR Part 11 Style Tamper-Evident Audit Trail
-* **Action:** Navigate to **Audit Trail** (`/audit`).
-* **What to Say:**
-  > *"Finally, for accreditation under ISO/IEC 17025 and regulatory compliance, we have built an immutable, chronological audit trail.*
-  >
-  > *Every button clicked, measurement entered, test repeated, or report approved is logged with user ID, role, exact timestamp, and delta changes. Regulators can audit the entire lifecycle in seconds."*
+## ⚡ Presenter Cheat Sheet: Browser Setup Before You Go On Stage
+
+To ensure a seamless, zero-fumble 3-minute delivery, **open these 4 tabs in Chrome or Edge before your turn**:
+
+| Tab # | Page URL | Title / State | Keyboard Shortcut |
+| :---: | :--- | :--- | :---: |
+| **Tab 1** | `http://localhost:5173/` | Dashboard (Overview) | `Ctrl + 1` |
+| **Tab 2** | `http://localhost:5173/instruments/inst-001` | Mettler Toledo Scale Profile | `Ctrl + 2` |
+| **Tab 3** | `http://localhost:5173/testing/session-01` | Active Testing Workstation | `Ctrl + 3` |
+| **Tab 4** | `http://localhost:5173/reports/rep-001` | Official OIML Test Certificate | `Ctrl + 4` |
+| **Tab 5** | `http://localhost:5173/audit` | 21 CFR Part 11 Audit Trail | `Ctrl + 5` |
+
+> 💡 **Hackathon Pro-Tip:** Use `Ctrl + 1`, `Ctrl + 2`, `Ctrl + 3`, `Ctrl + 4`, `Ctrl + 5` to switch screens instantaneously. You won't waste a single precious second waiting for pages to load!
 
 ---
 
-## 🛡️ Part 4: Technology, Architecture & Scalability (07:00 - 08:30)
+## 🧠 Jury Q&A Defense: Top 5 Tough Questions & Winning Answers
 
-### 💬 What to Say:
-> *"From an engineering perspective, METROLOGY is built on modern, industrial-grade web architecture:*
->
-> * **Frontend Core:** React 19 and TypeScript for compile-time safety across all metrology formulas.
-> * **Zero-Lag Calculation:** A client-side reactive store powered by Zustand with zero network latency, allowing operators to enter measurements offline even in remote calibration bays.
-> * **Bespoke Design System:** Pure CSS without heavy frameworks, achieving lightning-fast initial load times and high visual clarity under bright laboratory conditions.
-> * **Deployment:** Completely optimized for cloud deployment on Vercel with automated continuous delivery and SPA fallback routing.
->
-> *Our platform is not a prototype; it is an extensible platform ready for direct hardware integration via WebSerial API to read RS-232 and USB scale outputs automatically."*
-
-### 🖥️ Slide / Visual:
-* **Slide 4: System Architecture Diagram** showing Input Sources $\to$ Metrology Rule Engine $\to$ State Management $\to$ Certificate Generator $\to$ Immutable Audit Log.
+### Q1: *"How does your algorithm handle rounding error on digital indicators where only whole increments are visible?"*
+* **Answer:**
+  > *"Per OIML R-76 §A.4.4.3, digital scales round internal signals to the nearest graduation $d$. To compute the exact unrounded error, our application implements the statutory changeover formula:  
+  > $$E = I + \frac{1}{2}e - \Delta L - L$$  
+  > The operator places fractional test weights ($\Delta L \approx 0.1e$) until the display ticks to the next interval. Our engine takes $\Delta L$, computes the true rounding offset, subtracts zero correction ($E_0$), and provides true error $E_c$ down to 4 decimal places."*
 
 ---
 
-## 🎯 Part 5: Conclusion & Summary (08:30 - 09:00)
-
-### 💬 What to Say:
-> *"In summary, METROLOGY delivers:*
-> 1. *100% mathematical compliance with OIML Recommendation R-76.*
-> 2. *Reduction of test certificate generation time from 3 hours to 30 seconds.*
-> 3. *Complete elimination of human mathematical errors.*
-> 4. *Cryptographic authenticity and regulatory audit compliance.*
->
-> *Thank you very much. We are now open for your questions."*
+### Q2: *"How does the software handle different accuracy classes like Class I microbalances vs Class III industrial truck weighbridges?"*
+* **Answer:**
+  > *"When an instrument is registered, the system takes $\text{Max}$ capacity and scale interval $e$ to compute resolution $n = \text{Max} / e$. It validates whether $n$ satisfies OIML Table 3 criteria (e.g., $n \ge 50,000$ for Class I, up to $10,000$ for Class III). The rule engine then dynamically binds the proper piecewise MPE curve: $\pm 0.5e$ up to $500e$, $\pm 1.0e$ from $501e$ to $2000e$, and $\pm 1.5e$ above $2000e$."*
 
 ---
 
-## 🧠 Jury Q&A Defense Guide: Answers to Tough Questions
-
-Here are the most likely technical and domain questions evaluators will ask, along with the exact responses to give:
-
-### Q1: *"How does your system calculate the turning point error when a digital scale only shows round numbers?"*
-**Answer:**
-> *"Per OIML R-76 §A.4.4.3, digital scales round the continuous internal reading to the nearest graduation division $d$. To determine the precise unrounded indication, our application implements the turning point formula:*
-> $$E = I + \frac{1}{2}e - \Delta L - L$$
-> *The operator adds small weights (fractions of $e$, typically $0.1\,e$) until the display transitions to the next increment $I + e$. Our Turning Point Calculator takes this added load $\Delta L$, computes the true rounding offset, subtracts any zero error ($E_0$), and yields the exact true error $E_c$ down to fractional decimal accuracy."*
+### Q3: *"Can an operator manipulate data or modify failed test records to fake a pass?"*
+* **Answer:**
+  > *"Absolutely not. First, the pass/fail determination is computed deterministically in code—the operator has no manual override. Second, every attempt and measurement is logged into an immutable, append-only audit trail. Third, certificate approval requires the Reviewer role and generates a cryptographic SHA-256 checksum over the measurement dataset. Any post-issuance tampering invalidates the certificate."*
 
 ---
 
-### Q2: *"How do you handle different accuracy classes like Class I microbalances vs Class III industrial weighbridges?"*
-**Answer:**
-> *"When an instrument is configured, the system takes its capacity $\text{Max}$ and scale interval $e$ to calculate $n = \text{Max} / e$. It validates whether $n$ meets the statutory limits defined in OIML R-76 Table 3:*
-> * *Class I: $n \ge 50,000$ (Special Accuracy)*
-> * *Class II: $100 \le n \le 100,000$ (High Accuracy)*
-> * *Class III: $100 \le n \le 10,000$ (Medium Accuracy)*
-> * *Class IIII: $100 \le n \le 1,000$ (Ordinary Accuracy)*
-> *The rule engine automatically assigns the proper MPE step-function ($\pm 0.5e, \pm 1.0e, \pm 1.5e$) specific to that class, and enforces the correct minimum load $\text{Min}$."*
+### Q4: *"What happens if there is no internet in remote industrial testing sheds?"*
+* **Answer:**
+  > *"The entire metrology calculation engine, local data persistence, and vector PDF rendering execute 100% client-side in the browser. The platform works completely offline without network latency, making it ideal for field verification vans and shielded calibration laboratories."*
 
 ---
 
-### Q3: *"Can an operator manipulate the data or change failed test results to make an instrument pass?"*
-**Answer:**
-> *"No. The system enforces strict separation of duties and data immutability:*
-> 1. *Operators can only record measurements; they cannot override the mathematical pass/fail determination, which is computed dynamically by the code engine.*
-> 2. *Every entry, modification, or re-test attempt is stamped into the 21 CFR Part 11 style Audit Trail with the operator's identity and timestamp.*
-> 3. *Once submitted, only a designated Reviewer can approve the report. Upon approval, an immutable cryptographic SHA-256 hash is generated from the test payload, making post-facto tampering immediately detectable."*
+### Q5: *"Can this connect directly to digital weighing machines to avoid manual data entry?"*
+* **Answer:**
+  > *"Yes! The application architecture is built to ingest data directly via the browser's native **Web Serial API** and **WebUSB API**. This allows connecting standard RS-232 and USB serial outputs from Mettler Toledo, Sartorius, and Avery Weigh-Tronix scales directly into the workstation table in real time."*
 
 ---
 
-### Q4: *"What if the laboratory has no internet connection in a remote area or shielded room?"*
-**Answer:**
-> *"Our entire computational engine and state storage execute client-side in the browser. It functions fully offline. All instrument data, ongoing test sessions, and PDF certificate generation run locally without sending sensitive measurement data across the network until connectivity is restored."*
+## 📋 Pre-Presentation Checklist (Final 5 Minutes)
 
----
-
-### Q5: *"Can this connect directly to digital weighing machines to avoid manual keying of values?"*
-**Answer:**
-> *"Yes! Because our architecture is modern web-native, we have architected the data ingestion layer to interface with the browser's native **Web Serial API** and **WebUSB API**. This allows connecting standard RS-232 / USB scale interfaces directly to the workstation, reading continuous gross and net weights straight into the test table without manual input."*
-
----
-
-## 🏆 Presentation Quick Checklist
-
-- [ ] Web application running locally or on Vercel
-- [ ] Browser zoom set to 100% or 90% for optimal layout view
-- [ ] Demo credentials remembered (`operator@lab.gov` / `operator123`)
-- [ ] Keyboard ready for `Ctrl + K` command palette demonstration
-- [ ] Test session pre-loaded with sample measurements showing active progress bar
-- [ ] One completed report ready (`REP-2026-001`) to demonstrate instant PDF export
-- [ ] Audit trail pre-populated with realistic actions
+- [x] Application running at [http://localhost:5173/](http://localhost:5173/)
+- [x] 5 browser tabs pre-loaded (`/`, `/instruments/inst-001`, `/testing/session-01`, `/reports/rep-001`, `/audit`)
+- [x] Browser zoom set to 100% (clean White & Purple display)
+- [x] Quick simulation buttons tested (`⚡ Nominal` and `⚠️ Fail Test`)
+- [x] PDF generation tested (saves cleanly as PDF)
+- [x] Timer set on phone for exactly 2 minutes 45 seconds (signal to wrap up)
