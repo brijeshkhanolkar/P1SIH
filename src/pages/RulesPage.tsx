@@ -41,21 +41,21 @@ export default function RulesPage() {
 
         <div className="tech-panel-body" style={{ padding: '1.25rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: 4, border: '1px solid var(--slate-border)' }}>
+            <div style={{ padding: '0.85rem', background: 'var(--bg-void)', borderRadius: 6, border: '1px solid var(--slate-border)' }}>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>RULE NAME</div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{activeRuleVersion.name}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{activeRuleVersion.name}</div>
             </div>
-            <div style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: 4, border: '1px solid var(--slate-border)' }}>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>VERSION IDENTIFIER</div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--amber)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>{activeRuleVersion.version}</div>
+            <div style={{ padding: '0.85rem', background: 'var(--purple-dim)', borderRadius: 6, border: '1px solid var(--purple-border)' }}>
+              <div style={{ fontSize: '0.68rem', color: 'var(--purple)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>VERSION IDENTIFIER</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--purple)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>{activeRuleVersion.version}</div>
             </div>
-            <div style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: 4, border: '1px solid var(--slate-border)' }}>
+            <div style={{ padding: '0.85rem', background: 'var(--bg-void)', borderRadius: 6, border: '1px solid var(--slate-border)' }}>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>EFFECTIVE DATE</div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{new Date(activeRuleVersion.effective_date).toLocaleDateString()}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{new Date(activeRuleVersion.effective_date).toLocaleDateString()}</div>
             </div>
-            <div style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: 4, border: '1px solid var(--slate-border)' }}>
+            <div style={{ padding: '0.85rem', background: 'var(--bg-void)', borderRadius: 6, border: '1px solid var(--slate-border)' }}>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>ENFORCEMENT AUTHORITY</div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{activeRuleVersion.updated_by}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{activeRuleVersion.updated_by}</div>
             </div>
           </div>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>

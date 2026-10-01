@@ -51,7 +51,7 @@ function App() {
           <Route path="repository" element={<RepositoryPage />} />
           <Route path="audit" element={<AuditPage />} />
           <Route path="users" element={<RoleRoute roles={['admin']}><UsersPage /></RoleRoute>} />
-          <Route path="rules" element={<RoleRoute roles={['admin', 'reviewer']}><RulesPage /></RoleRoute>} />
+          <Route path="rules" element={<RulesPage />} />
           <Route path="settings" element={<RoleRoute roles={['admin']}><SettingsPage /></RoleRoute>} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
